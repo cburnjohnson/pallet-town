@@ -1,6 +1,14 @@
-<template>app ve</template>
+<template><Game /></template>
 
-<script setup lang="ts"></script>
+<script lang="ts">
+import Game from '@/components/Game.vue';
+
+export default {
+  components: {
+    Game
+  }
+};
+</script>
 
 <style lang="scss">
 @import './styles/main.scss';
