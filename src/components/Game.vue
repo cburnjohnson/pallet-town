@@ -1,11 +1,15 @@
 <template>
   <div class="game">
-    <canvas id="gameCanvas" />
+    <canvas
+      id="gameCanvas"
+      class="game__canvas"
+    />
   </div>
 </template>
 
 <script>
 import mapImage from '@/assets/imgs/game-portfolio-map.png';
+import playerSpriteImage from '@/assets/sprites/player/playerDown.png';
 
 export default {
   data() {
@@ -19,14 +23,21 @@ export default {
     this.context = this.gameCanvas.getContext('2d');
 
     this.gameCanvas.width = 1024;
-    this.gameCanvas.height = 576;
+    this.gameCanvas.height = 800;
 
     const image = new Image();
     image.src = mapImage;
 
     image.onload = () => {
       this.context.drawImage(image, -100, -250);
+
+      playerImage.onload = () => {
+        this.context.drawImage(playerImage, 150, 250);
+      };
     };
+
+    const playerImage = new Image();
+    playerImage.src = playerSpriteImage;
   }
 };
 </script>
