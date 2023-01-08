@@ -62,12 +62,15 @@ export default {
     this.player = new Sprite({
       context,
       image: playerImage,
+      sprites: {
+        down: playerImage
+      },
       position: {
-        x: this.gameCanvas.width / 2 - playerImage.width / 1 / 2,
+        x: this.gameCanvas.width / 2 - playerImage.width / 3 / 2,
         y: this.gameCanvas.height / 2
       },
       frames: {
-        max: 10
+        max: 3
       }
     });
 
@@ -140,19 +143,27 @@ export default {
       this.map.draw();
       this.player.draw();
 
+      this.player.moving = false;
+
       if (keys.w.pressed && lastKeyPressed === 'w') {
+        this.player.moving = true;
         this.map.position.y += 3;
       }
 
       if (keys.a.pressed && lastKeyPressed === 'a') {
+        this.player.moving = true;
         this.map.position.x += 3;
       }
 
       if (keys.s.pressed && lastKeyPressed === 's') {
+        this.player.moving = true;
+        this.player.image = this.player.sprites.down;
+
         this.map.position.y -= 3;
       }
 
       if (keys.d.pressed && lastKeyPressed === 'd') {
+        this.player.moving = true;
         this.map.position.x -= 3;
       }
     }
