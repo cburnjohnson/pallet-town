@@ -9,7 +9,7 @@
 
 <script>
 import mapImageAsset from '@/assets/imgs/game-portfolio-map.png';
-import playerImageAsset from '@/assets/sprites/player/Untitled-1.png';
+import playerImageAsset from '@/assets/sprites/player/player-2.png';
 import Sprite from '@/classes/Sprite';
 
 let context;
@@ -67,7 +67,7 @@ export default {
         y: this.gameCanvas.height / 2
       },
       frames: {
-        max: 1
+        max: 10
       }
     });
 
