@@ -9,7 +9,10 @@
 
 <script>
 import mapImageAsset from '@/assets/imgs/game-portfolio-map.png';
-import playerImageAsset from '@/assets/sprites/player/player-2.png';
+import playerDownImageAsset from '@/assets/sprites/player/red-down.png';
+import playerLeftImageAsset from '@/assets/sprites/player/red-left.png';
+import playerRightImageAsset from '@/assets/sprites/player/red-right.png';
+import playerUpImageAsset from '@/assets/sprites/player/red-up.png';
 import Sprite from '@/classes/Sprite';
 
 let context;
@@ -56,26 +59,37 @@ export default {
       }
     });
 
-    const playerImage = new Image();
-    playerImage.src = playerImageAsset;
+    const playerDownImage = new Image();
+    playerDownImage.src = playerDownImageAsset;
+
+    const playerUpImage = new Image();
+    playerUpImage.src = playerUpImageAsset;
+
+    const playerLeftImage = new Image();
+    playerLeftImage.src = playerLeftImageAsset;
+
+    const playerRightImage = new Image();
+    playerRightImage.src = playerRightImageAsset;
 
     this.player = new Sprite({
       context,
-      image: playerImage,
+      image: playerDownImage,
       sprites: {
-        down: playerImage
+        up: playerUpImage,
+        left: playerLeftImage,
+        right: playerRightImage,
+        down: playerDownImage
       },
       position: {
-        x: this.gameCanvas.width / 2 - playerImage.width / 3 / 2,
+        x: this.gameCanvas.width / 2 - playerDownImage.width / 4 / 2,
         y: this.gameCanvas.height / 2
       },
       frames: {
-        max: 3
+        max: 4
       }
     });
 
     this.animate();
-
     this.addEventListeners();
   },
   methods: {
@@ -147,11 +161,15 @@ export default {
 
       if (keys.w.pressed && lastKeyPressed === 'w') {
         this.player.moving = true;
+        this.player.image = this.player.sprites.up;
+
         this.map.position.y += 3;
       }
 
       if (keys.a.pressed && lastKeyPressed === 'a') {
         this.player.moving = true;
+        this.player.image = this.player.sprites.left;
+
         this.map.position.x += 3;
       }
 
@@ -164,6 +182,8 @@ export default {
 
       if (keys.d.pressed && lastKeyPressed === 'd') {
         this.player.moving = true;
+        this.player.image = this.player.sprites.right;
+
         this.map.position.x -= 3;
       }
     }
