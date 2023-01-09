@@ -14,8 +14,10 @@ import playerLeftImageAsset from '@/assets/sprites/player/red-left.png';
 import playerRightImageAsset from '@/assets/sprites/player/red-right.png';
 import playerUpImageAsset from '@/assets/sprites/player/red-up.png';
 import Sprite from '@/classes/Sprite';
+import Boundary from '@/classes/Boundary';
+import boundariesData from '@/data/boundariesData';
 
-let context;
+export let context;
 let lastKeyPressed;
 const keys = {
   w: {
@@ -32,12 +34,18 @@ const keys = {
   }
 };
 
+const mapOffset = {
+  x: 0,
+  y: -100
+};
+
 export default {
   data() {
     return {
       gameCanvas: null,
       map: null,
-      player: null
+      player: null,
+      boundaries: []
     };
   },
   mounted() {
@@ -47,6 +55,28 @@ export default {
     this.gameCanvas.width = 840;
     this.gameCanvas.height = 800;
 
+    const boundariesMap = [];
+    for (let i = 0; i < boundariesData.length; i += 20) {
+      boundariesMap.push(boundariesData.slice(i, i + 20));
+    }
+
+    boundariesMap.forEach((row, i) => {
+      row.forEach((boundary, j) => {
+        if (boundary !== 1049) {
+          return;
+        }
+
+        this.boundaries.push(
+          new Boundary({
+            position: {
+              x: j * Boundary.width + mapOffset.x,
+              y: i * Boundary.height + mapOffset.y
+            }
+          })
+        );
+      });
+    });
+
     const mapImage = new Image();
     mapImage.src = mapImageAsset;
 
@@ -54,8 +84,8 @@ export default {
       context,
       image: mapImage,
       position: {
-        x: 0,
-        y: -100
+        x: mapOffset.x,
+        y: mapOffset.y
       }
     });
 
@@ -155,6 +185,11 @@ export default {
     animate() {
       window.requestAnimationFrame(this.animate);
       this.map.draw();
+
+      this.boundaries.forEach((boundary) => {
+        boundary.draw();
+      });
+
       this.player.draw();
 
       this.player.moving = false;

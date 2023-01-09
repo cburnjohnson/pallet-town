@@ -1,6 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/eslintrc",
   "extends": ["eslint:recommended", "plugin:vue/vue3-recommended"],
+  "parserOptions": {
+    "ecmaVersion": 2022
+  },
   "rules": {
     "brace-style": ["error", "stroustrup"],
     "comma-style": ["error", "last"],
