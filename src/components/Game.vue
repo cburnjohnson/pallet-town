@@ -9,6 +9,7 @@
 
 <script>
 import mapImageAsset from '@/assets/imgs/game-portfolio-map.png';
+import foregroundObjectsAsset from '@/assets/imgs/foreground-objects.png';
 import playerDownImageAsset from '@/assets/sprites/player/red-down.png';
 import playerLeftImageAsset from '@/assets/sprites/player/red-left.png';
 import playerRightImageAsset from '@/assets/sprites/player/red-right.png';
@@ -44,10 +45,15 @@ export default {
     return {
       gameCanvas: null,
       map: null,
+      foregroundObjects: null,
       player: null,
-      boundaries: [],
-      movables: []
+      boundaries: []
     };
+  },
+  computed: {
+    movables() {
+      return [this.map, this.foregroundObjects, ...this.boundaries];
+    }
   },
   mounted() {
     this.gameCanvas = document.querySelector('#gameCanvas');
@@ -90,6 +96,18 @@ export default {
       }
     });
 
+    const foregroundObjects = new Image();
+    foregroundObjects.src = foregroundObjectsAsset;
+
+    this.foregroundObjects = new Sprite({
+      context,
+      image: foregroundObjects,
+      position: {
+        x: mapOffset.x,
+        y: mapOffset.y
+      }
+    });
+
     const playerDownImage = new Image();
     playerDownImage.src = playerDownImageAsset;
 
@@ -119,8 +137,6 @@ export default {
         max: 4
       }
     });
-
-    this.movables = [this.map, ...this.boundaries];
 
     this.animate();
     this.addEventListeners();
@@ -194,6 +210,7 @@ export default {
       });
 
       this.player.draw();
+      this.foregroundObjects.draw();
 
       this.player.moving = false;
 
