@@ -36,7 +36,7 @@ const keys = {
 
 const mapOffset = {
   x: 0,
-  y: -100
+  y: -150
 };
 
 export default {
@@ -45,7 +45,8 @@ export default {
       gameCanvas: null,
       map: null,
       player: null,
-      boundaries: []
+      boundaries: [],
+      movables: []
     };
   },
   mounted() {
@@ -118,6 +119,8 @@ export default {
         max: 4
       }
     });
+
+    this.movables = [this.map, ...this.boundaries];
 
     this.animate();
     this.addEventListeners();
@@ -195,32 +198,104 @@ export default {
       this.player.moving = false;
 
       if (keys.w.pressed && lastKeyPressed === 'w') {
+        // stop movement if running into a boundary
+        for (let i = 0; i < this.boundaries.length; i++) {
+          const boundary = this.boundaries[i];
+          if (
+            this.rectangularCollision(this.player, {
+              ...boundary,
+              position: {
+                x: boundary.position.x,
+                y: boundary.position.y + 3
+              }
+            })
+          ) {
+            return;
+          }
+        }
+
         this.player.moving = true;
         this.player.image = this.player.sprites.up;
 
-        this.map.position.y += 3;
+        this.movables.forEach((movable) => (movable.position.y += 3));
       }
 
       if (keys.a.pressed && lastKeyPressed === 'a') {
+        // stop movement if running into a boundary
+        for (let i = 0; i < this.boundaries.length; i++) {
+          const boundary = this.boundaries[i];
+          if (
+            this.rectangularCollision(this.player, {
+              ...boundary,
+              position: {
+                x: boundary.position.x + 3,
+                y: boundary.position.y
+              }
+            })
+          ) {
+            return;
+          }
+        }
+
         this.player.moving = true;
         this.player.image = this.player.sprites.left;
 
-        this.map.position.x += 3;
+        this.movables.forEach((movable) => (movable.position.x += 3));
       }
 
       if (keys.s.pressed && lastKeyPressed === 's') {
+        // stop movement if running into a boundary
+        for (let i = 0; i < this.boundaries.length; i++) {
+          const boundary = this.boundaries[i];
+          if (
+            this.rectangularCollision(this.player, {
+              ...boundary,
+              position: {
+                x: boundary.position.x,
+                y: boundary.position.y
+              }
+            })
+          ) {
+            return;
+          }
+        }
+
         this.player.moving = true;
         this.player.image = this.player.sprites.down;
 
-        this.map.position.y -= 3;
+        this.movables.forEach((movable) => (movable.position.y -= 3));
       }
 
       if (keys.d.pressed && lastKeyPressed === 'd') {
+        // stop movement if running into a boundary
+        for (let i = 0; i < this.boundaries.length; i++) {
+          const boundary = this.boundaries[i];
+          if (
+            this.rectangularCollision(this.player, {
+              ...boundary,
+              position: {
+                x: boundary.position.x - 3,
+                y: boundary.position.y
+              }
+            })
+          ) {
+            return;
+          }
+        }
+
         this.player.moving = true;
         this.player.image = this.player.sprites.right;
 
-        this.map.position.x -= 3;
+        this.movables.forEach((movable) => (movable.position.x -= 3));
       }
+    },
+    rectangularCollision(rectangle1, rectangle2) {
+      return (
+        rectangle1.position.x + rectangle1.width >= rectangle2.position.x &&
+        rectangle1.position.x <= rectangle2.position.x + rectangle2.width &&
+        rectangle1.position.y <= rectangle2.position.y + rectangle2.height &&
+        rectangle1.position.y + rectangle1.height >= rectangle2.position.y
+      );
     }
   }
 };
