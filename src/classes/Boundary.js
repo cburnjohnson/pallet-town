@@ -11,7 +11,7 @@ export default class Boundary {
   }
 
   draw() {
-    context.fillStyle = 'red';
+    context.fillStyle = 'rgba(255, 255, 255, .25)';
     context.fillRect(this.position.x, this.position.y, this.width, this.height);
   }
 }

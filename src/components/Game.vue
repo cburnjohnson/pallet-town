@@ -36,8 +36,8 @@ const keys = {
 };
 
 const mapOffset = {
-  x: 0,
-  y: -150
+  x: -300,
+  y: -450
 };
 
 const SPEED = 3;
@@ -65,8 +65,8 @@ export default {
     this.gameCanvas.height = 800;
 
     const boundariesMap = [];
-    for (let i = 0; i < boundariesData.length; i += 20) {
-      boundariesMap.push(boundariesData.slice(i, i + 20));
+    for (let i = 0; i < boundariesData.length; i += 30) {
+      boundariesMap.push(boundariesData.slice(i, i + 30));
     }
 
     boundariesMap.forEach((row, i) => {
