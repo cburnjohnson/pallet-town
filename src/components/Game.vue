@@ -40,6 +40,8 @@ const mapOffset = {
   y: -150
 };
 
+const SPEED = 3;
+
 export default {
   data() {
     return {
@@ -223,7 +225,7 @@ export default {
               ...boundary,
               position: {
                 x: boundary.position.x,
-                y: boundary.position.y + 3
+                y: boundary.position.y + SPEED
               }
             })
           ) {
@@ -234,7 +236,7 @@ export default {
         this.player.moving = true;
         this.player.image = this.player.sprites.up;
 
-        this.movables.forEach((movable) => (movable.position.y += 3));
+        this.movables.forEach((movable) => (movable.position.y += SPEED));
       }
 
       if (keys.a.pressed && lastKeyPressed === 'a') {
@@ -245,7 +247,7 @@ export default {
             this.rectangularCollision(this.player, {
               ...boundary,
               position: {
-                x: boundary.position.x + 3,
+                x: boundary.position.x + SPEED,
                 y: boundary.position.y
               }
             })
@@ -257,7 +259,7 @@ export default {
         this.player.moving = true;
         this.player.image = this.player.sprites.left;
 
-        this.movables.forEach((movable) => (movable.position.x += 3));
+        this.movables.forEach((movable) => (movable.position.x += SPEED));
       }
 
       if (keys.s.pressed && lastKeyPressed === 's') {
@@ -269,7 +271,7 @@ export default {
               ...boundary,
               position: {
                 x: boundary.position.x,
-                y: boundary.position.y
+                y: boundary.position.y - SPEED
               }
             })
           ) {
@@ -280,7 +282,7 @@ export default {
         this.player.moving = true;
         this.player.image = this.player.sprites.down;
 
-        this.movables.forEach((movable) => (movable.position.y -= 3));
+        this.movables.forEach((movable) => (movable.position.y -= SPEED));
       }
 
       if (keys.d.pressed && lastKeyPressed === 'd') {
@@ -291,7 +293,7 @@ export default {
             this.rectangularCollision(this.player, {
               ...boundary,
               position: {
-                x: boundary.position.x - 3,
+                x: boundary.position.x - SPEED,
                 y: boundary.position.y
               }
             })
@@ -303,7 +305,7 @@ export default {
         this.player.moving = true;
         this.player.image = this.player.sprites.right;
 
-        this.movables.forEach((movable) => (movable.position.x -= 3));
+        this.movables.forEach((movable) => (movable.position.x -= SPEED));
       }
     },
     rectangularCollision(rectangle1, rectangle2) {
