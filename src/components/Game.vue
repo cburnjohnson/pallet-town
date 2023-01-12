@@ -9,6 +9,7 @@
 
 <script>
 import mapImageAsset from '@/assets/imgs/game-portfolio-map.png';
+import homeMapImageAsset from '@/assets/imgs/homeMap.png';
 import foregroundObjectsAsset from '@/assets/imgs/foreground-objects.png';
 import playerDownImageAsset from '@/assets/sprites/player/red-down.png';
 import playerLeftImageAsset from '@/assets/sprites/player/red-left.png';
@@ -49,16 +50,19 @@ export default {
     return {
       gameCanvas: null,
       map: null,
+      homeMap: null,
       foregroundObjects: null,
       player: null,
       boundaries: [],
-      entrances: []
+      entrances: [],
+      mapAnimationFrame: null
     };
   },
   computed: {
     movables() {
       return [
         this.map,
+        this.homeMap,
         this.foregroundObjects,
         ...this.boundaries,
         ...this.entrances
@@ -100,12 +104,12 @@ export default {
       });
     });
 
-    const homeMap = [];
+    const entrancesMap = [];
     for (let i = 0; i < homeData.length; i += TOTAL_AMOUNT_OF_TILES_WIDE) {
-      homeMap.push(homeData.slice(i, i + TOTAL_AMOUNT_OF_TILES_WIDE));
+      entrancesMap.push(homeData.slice(i, i + TOTAL_AMOUNT_OF_TILES_WIDE));
     }
 
-    homeMap.forEach((row, i) => {
+    entrancesMap.forEach((row, i) => {
       row.forEach((boundary, j) => {
         if (boundary !== 1050) {
           return;
@@ -129,6 +133,18 @@ export default {
     this.map = new Sprite({
       context,
       image: mapImage,
+      position: {
+        x: mapOffset.x,
+        y: mapOffset.y
+      }
+    });
+
+    const homeMap = new Image();
+    homeMap.src = homeMapImageAsset;
+
+    this.homeMap = new Sprite({
+      context,
+      image: homeMap,
       position: {
         x: mapOffset.x,
         y: mapOffset.y
@@ -241,7 +257,7 @@ export default {
       });
     },
     animate() {
-      window.requestAnimationFrame(this.animate);
+      this.mapAnimationFrame = window.requestAnimationFrame(this.animate);
       this.map.draw();
 
       this.boundaries.forEach((boundary) => {
@@ -286,7 +302,7 @@ export default {
               }
             })
           ) {
-            console.log('yo'); //eslint-disable-line
+            this.enterBuilding();
             return;
           }
         }
@@ -366,6 +382,42 @@ export default {
         this.movables.forEach((movable) => (movable.position.x -= SPEED));
       }
     },
+    animateHome() {
+      window.requestAnimationFrame(this.animateHome);
+
+      this.homeMap.draw();
+      this.player.draw();
+
+      this.player.moving = false;
+
+      if (keys.w.pressed && lastKeyPressed === 'w') {
+        this.player.moving = true;
+        this.player.image = this.player.sprites.up;
+
+        this.movables.forEach((movable) => (movable.position.y += SPEED));
+      }
+
+      if (keys.a.pressed && lastKeyPressed === 'a') {
+        this.player.moving = true;
+        this.player.image = this.player.sprites.left;
+
+        this.movables.forEach((movable) => (movable.position.x += SPEED));
+      }
+
+      if (keys.s.pressed && lastKeyPressed === 's') {
+        this.player.moving = true;
+        this.player.image = this.player.sprites.down;
+
+        this.movables.forEach((movable) => (movable.position.y -= SPEED));
+      }
+
+      if (keys.d.pressed && lastKeyPressed === 'd') {
+        this.player.moving = true;
+        this.player.image = this.player.sprites.right;
+
+        this.movables.forEach((movable) => (movable.position.x -= SPEED));
+      }
+    },
     rectangularCollision(rectangle1, rectangle2) {
       return (
         rectangle1.position.x + rectangle1.width >= rectangle2.position.x &&
@@ -373,6 +425,10 @@ export default {
         rectangle1.position.y <= rectangle2.position.y + rectangle2.height &&
         rectangle1.position.y + rectangle1.height >= rectangle2.position.y
       );
+    },
+    enterBuilding() {
+      cancelAnimationFrame(this.mapAnimationFrame);
+      this.animateHome();
     }
   }
 };
