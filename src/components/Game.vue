@@ -81,79 +81,9 @@ export default {
     this.gameCanvas.width = 840;
     this.gameCanvas.height = 800;
 
-    const boundariesMap = [];
-    for (
-      let i = 0;
-      i < boundariesData.length;
-      i += TOTAL_AMOUNT_OF_TILES_WIDE
-    ) {
-      boundariesMap.push(
-        boundariesData.slice(i, i + TOTAL_AMOUNT_OF_TILES_WIDE)
-      );
-    }
-
-    boundariesMap.forEach((row, i) => {
-      row.forEach((boundary, j) => {
-        if (boundary !== 1049) {
-          return;
-        }
-
-        this.boundaries.push(
-          new Boundary({
-            position: {
-              x: j * Boundary.width + mapOffset.x,
-              y: i * Boundary.height + mapOffset.y
-            }
-          })
-        );
-      });
-    });
-
-    const entrancesMap = [];
-    for (let i = 0; i < homeData.length; i += TOTAL_AMOUNT_OF_TILES_WIDE) {
-      entrancesMap.push(homeData.slice(i, i + TOTAL_AMOUNT_OF_TILES_WIDE));
-    }
-
-    entrancesMap.forEach((row, i) => {
-      row.forEach((boundary, j) => {
-        if (boundary !== 1050) {
-          return;
-        }
-
-        this.entrances.push(
-          new Boundary({
-            color: 'rgba(0, 255, 0, .5)',
-            position: {
-              x: j * Boundary.width + mapOffset.x,
-              y: i * Boundary.height + mapOffset.y
-            }
-          })
-        );
-      });
-    });
-
-    const homeExitMap = [];
-    for (let i = 0; i < homeExitData.length; i += TOTAL_AMOUNT_OF_TILES_WIDE) {
-      homeExitMap.push(homeExitData.slice(i, i + TOTAL_AMOUNT_OF_TILES_WIDE));
-    }
-
-    homeExitMap.forEach((row, i) => {
-      row.forEach((symbol, j) => {
-        if (symbol !== 8034) {
-          return;
-        }
-
-        this.homeExits.push(
-          new Boundary({
-            color: 'rgba(0, 255, 0, 1)',
-            position: {
-              x: j * Boundary.width + mapOffset.x,
-              y: i * Boundary.height + mapOffset.y
-            }
-          })
-        );
-      });
-    });
+    this.boundaries = this.createBoundaries(boundariesData, 1049);
+    this.entrances = this.createBoundaries(homeData, 1050);
+    this.homeExits = this.createBoundaries(homeExitData, 8034);
 
     const mapImage = new Image();
     mapImage.src = mapImageAsset;
@@ -491,6 +421,32 @@ export default {
     leaveBuilding() {
       cancelAnimationFrame(this.homeAnimationFrame);
       this.animate();
+    },
+    createBoundaries(data, symbolNumber) {
+      const boundariesMap = [];
+      for (let i = 0; i < data.length; i += TOTAL_AMOUNT_OF_TILES_WIDE) {
+        boundariesMap.push(data.slice(i, i + TOTAL_AMOUNT_OF_TILES_WIDE));
+      }
+
+      const boundaries = [];
+      boundariesMap.forEach((row, i) => {
+        row.forEach((boundary, j) => {
+          if (boundary !== symbolNumber) {
+            return;
+          }
+
+          boundaries.push(
+            new Boundary({
+              position: {
+                x: j * Boundary.width + mapOffset.x,
+                y: i * Boundary.height + mapOffset.y
+              }
+            })
+          );
+        });
+      });
+
+      return boundaries;
     }
   }
 };
