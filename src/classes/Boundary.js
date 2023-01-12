@@ -6,12 +6,12 @@ export default class Boundary {
 
   constructor({ position }) {
     this.position = position;
-    this.width = 64;
-    this.height = 64;
+    this.width = 60;
+    this.height = 40;
   }
 
   draw() {
-    context.fillStyle = 'rgba(255, 255, 255, .25)';
+    context.fillStyle = 'rgba(255, 255, 255, .5)';
     context.fillRect(this.position.x, this.position.y, this.width, this.height);
   }
 }
