@@ -4,14 +4,15 @@ export default class Boundary {
   static width = 64;
   static height = 64;
 
-  constructor({ position }) {
+  constructor({ position, color = 'rgba(255, 255, 255, .5)' }) {
     this.position = position;
-    this.width = 60;
+    this.width = 40;
     this.height = 40;
+    this.color = color;
   }
 
   draw() {
-    context.fillStyle = 'rgba(255, 255, 255, .5)';
+    context.fillStyle = this.color;
     context.fillRect(this.position.x, this.position.y, this.width, this.height);
   }
 }

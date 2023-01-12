@@ -17,6 +17,7 @@ import playerUpImageAsset from '@/assets/sprites/player/red-up.png';
 import Sprite from '@/classes/Sprite';
 import Boundary from '@/classes/Boundary';
 import boundariesData from '@/data/boundariesData';
+import homeData from '@/data/homeData';
 
 export let context;
 let lastKeyPressed;
@@ -41,6 +42,7 @@ const mapOffset = {
 };
 
 const SPEED = 3;
+const TOTAL_AMOUNT_OF_TILES_WIDE = 30;
 
 export default {
   data() {
@@ -49,12 +51,18 @@ export default {
       map: null,
       foregroundObjects: null,
       player: null,
-      boundaries: []
+      boundaries: [],
+      entrances: []
     };
   },
   computed: {
     movables() {
-      return [this.map, this.foregroundObjects, ...this.boundaries];
+      return [
+        this.map,
+        this.foregroundObjects,
+        ...this.boundaries,
+        ...this.entrances
+      ];
     }
   },
   mounted() {
@@ -65,8 +73,14 @@ export default {
     this.gameCanvas.height = 800;
 
     const boundariesMap = [];
-    for (let i = 0; i < boundariesData.length; i += 30) {
-      boundariesMap.push(boundariesData.slice(i, i + 30));
+    for (
+      let i = 0;
+      i < boundariesData.length;
+      i += TOTAL_AMOUNT_OF_TILES_WIDE
+    ) {
+      boundariesMap.push(
+        boundariesData.slice(i, i + TOTAL_AMOUNT_OF_TILES_WIDE)
+      );
     }
 
     boundariesMap.forEach((row, i) => {
@@ -77,6 +91,29 @@ export default {
 
         this.boundaries.push(
           new Boundary({
+            position: {
+              x: j * Boundary.width + mapOffset.x,
+              y: i * Boundary.height + mapOffset.y
+            }
+          })
+        );
+      });
+    });
+
+    const homeMap = [];
+    for (let i = 0; i < homeData.length; i += TOTAL_AMOUNT_OF_TILES_WIDE) {
+      homeMap.push(homeData.slice(i, i + TOTAL_AMOUNT_OF_TILES_WIDE));
+    }
+
+    homeMap.forEach((row, i) => {
+      row.forEach((boundary, j) => {
+        if (boundary !== 1050) {
+          return;
+        }
+
+        this.entrances.push(
+          new Boundary({
+            color: 'rgba(0, 255, 0, .5)',
             position: {
               x: j * Boundary.width + mapOffset.x,
               y: i * Boundary.height + mapOffset.y
@@ -211,6 +248,10 @@ export default {
         boundary.draw();
       });
 
+      this.entrances.forEach((entrance) => {
+        entrance.draw();
+      });
+
       this.player.draw();
       this.foregroundObjects.draw();
 
@@ -229,6 +270,23 @@ export default {
               }
             })
           ) {
+            return;
+          }
+        }
+
+        // check if player is going into an entrance
+        for (let i = 0; i < this.entrances.length; i++) {
+          const entrance = this.entrances[i];
+          if (
+            this.rectangularCollision(this.player, {
+              ...entrance,
+              position: {
+                x: entrance.position.x,
+                y: entrance.position.y + SPEED
+              }
+            })
+          ) {
+            console.log('yo'); //eslint-disable-line
             return;
           }
         }
