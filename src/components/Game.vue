@@ -19,6 +19,7 @@ import Sprite from '@/classes/Sprite';
 import Boundary from '@/classes/Boundary';
 import boundariesData from '@/data/boundariesData';
 import homeData from '@/data/homeData';
+import homeExitData from '@/data/homeExitData';
 
 export let context;
 let lastKeyPressed;
@@ -55,6 +56,7 @@ export default {
       player: null,
       boundaries: [],
       entrances: [],
+      homeExits: [],
       mapAnimationFrame: null
     };
   },
@@ -65,7 +67,8 @@ export default {
         this.homeMap,
         this.foregroundObjects,
         ...this.boundaries,
-        ...this.entrances
+        ...this.entrances,
+        ...this.homeExits
       ];
     }
   },
@@ -118,6 +121,29 @@ export default {
         this.entrances.push(
           new Boundary({
             color: 'rgba(0, 255, 0, .5)',
+            position: {
+              x: j * Boundary.width + mapOffset.x,
+              y: i * Boundary.height + mapOffset.y
+            }
+          })
+        );
+      });
+    });
+
+    const homeExitMap = [];
+    for (let i = 0; i < homeExitData.length; i += TOTAL_AMOUNT_OF_TILES_WIDE) {
+      homeExitMap.push(homeExitData.slice(i, i + TOTAL_AMOUNT_OF_TILES_WIDE));
+    }
+
+    homeExitMap.forEach((row, i) => {
+      row.forEach((symbol, j) => {
+        if (symbol !== 8034) {
+          return;
+        }
+
+        this.homeExits.push(
+          new Boundary({
+            color: 'rgba(0, 255, 0, 1)',
             position: {
               x: j * Boundary.width + mapOffset.x,
               y: i * Boundary.height + mapOffset.y
@@ -386,6 +412,11 @@ export default {
       window.requestAnimationFrame(this.animateHome);
 
       this.homeMap.draw();
+
+      this.homeExits.forEach((homeExit) => {
+        homeExit.draw();
+      });
+
       this.player.draw();
 
       this.player.moving = false;
@@ -405,6 +436,23 @@ export default {
       }
 
       if (keys.s.pressed && lastKeyPressed === 's') {
+        // check if player is going into an exit
+        for (let i = 0; i < this.homeExits.length; i++) {
+          const homeExit = this.homeExits[i];
+          if (
+            this.rectangularCollision(this.player, {
+              ...homeExit,
+              position: {
+                x: homeExit.position.x,
+                y: homeExit.position.y - SPEED
+              }
+            })
+          ) {
+            this.leaveBuilding();
+            return;
+          }
+        }
+
         this.player.moving = true;
         this.player.image = this.player.sprites.down;
 
@@ -429,6 +477,10 @@ export default {
     enterBuilding() {
       cancelAnimationFrame(this.mapAnimationFrame);
       this.animateHome();
+    },
+    leaveBuilding() {
+      cancelAnimationFrame(this.homeAnimationFrame);
+      this.animate();
     }
   }
 };
