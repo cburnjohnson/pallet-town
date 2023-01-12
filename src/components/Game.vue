@@ -57,19 +57,21 @@ export default {
       boundaries: [],
       entrances: [],
       homeExits: [],
-      mapAnimationFrame: null
+      mapAnimationFrame: null,
+      homeAnimationFrame: null
     };
   },
   computed: {
-    movables() {
+    worldMovables() {
       return [
         this.map,
-        this.homeMap,
         this.foregroundObjects,
         ...this.boundaries,
-        ...this.entrances,
-        ...this.homeExits
+        ...this.entrances
       ];
+    },
+    buildingMovables() {
+      return [this.homeMap, ...this.homeExits];
     }
   },
   mounted() {
@@ -336,7 +338,7 @@ export default {
         this.player.moving = true;
         this.player.image = this.player.sprites.up;
 
-        this.movables.forEach((movable) => (movable.position.y += SPEED));
+        this.worldMovables.forEach((movable) => (movable.position.y += SPEED));
       }
 
       if (keys.a.pressed && lastKeyPressed === 'a') {
@@ -359,7 +361,7 @@ export default {
         this.player.moving = true;
         this.player.image = this.player.sprites.left;
 
-        this.movables.forEach((movable) => (movable.position.x += SPEED));
+        this.worldMovables.forEach((movable) => (movable.position.x += SPEED));
       }
 
       if (keys.s.pressed && lastKeyPressed === 's') {
@@ -382,7 +384,7 @@ export default {
         this.player.moving = true;
         this.player.image = this.player.sprites.down;
 
-        this.movables.forEach((movable) => (movable.position.y -= SPEED));
+        this.worldMovables.forEach((movable) => (movable.position.y -= SPEED));
       }
 
       if (keys.d.pressed && lastKeyPressed === 'd') {
@@ -405,11 +407,11 @@ export default {
         this.player.moving = true;
         this.player.image = this.player.sprites.right;
 
-        this.movables.forEach((movable) => (movable.position.x -= SPEED));
+        this.worldMovables.forEach((movable) => (movable.position.x -= SPEED));
       }
     },
     animateHome() {
-      window.requestAnimationFrame(this.animateHome);
+      this.homeAnimationFrame = window.requestAnimationFrame(this.animateHome);
 
       this.homeMap.draw();
 
@@ -425,14 +427,18 @@ export default {
         this.player.moving = true;
         this.player.image = this.player.sprites.up;
 
-        this.movables.forEach((movable) => (movable.position.y += SPEED));
+        this.buildingMovables.forEach(
+          (movable) => (movable.position.y += SPEED)
+        );
       }
 
       if (keys.a.pressed && lastKeyPressed === 'a') {
         this.player.moving = true;
         this.player.image = this.player.sprites.left;
 
-        this.movables.forEach((movable) => (movable.position.x += SPEED));
+        this.buildingMovables.forEach(
+          (movable) => (movable.position.x += SPEED)
+        );
       }
 
       if (keys.s.pressed && lastKeyPressed === 's') {
@@ -456,14 +462,18 @@ export default {
         this.player.moving = true;
         this.player.image = this.player.sprites.down;
 
-        this.movables.forEach((movable) => (movable.position.y -= SPEED));
+        this.buildingMovables.forEach(
+          (movable) => (movable.position.y -= SPEED)
+        );
       }
 
       if (keys.d.pressed && lastKeyPressed === 'd') {
         this.player.moving = true;
         this.player.image = this.player.sprites.right;
 
-        this.movables.forEach((movable) => (movable.position.x -= SPEED));
+        this.buildingMovables.forEach(
+          (movable) => (movable.position.x -= SPEED)
+        );
       }
     },
     rectangularCollision(rectangle1, rectangle2) {
