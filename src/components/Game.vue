@@ -39,19 +39,25 @@ const keys = {
   }
 };
 
-const WORLD_MAP_OFFSET = {
-  x: -300,
-  y: -450
+const WORLD_MAP = {
+  OFFSET: {
+    x: -300,
+    y: -450
+  },
+  TILE_WIDTH: 30,
+  ZOOM_LEVEL: 400
 };
 
-const HOME_MAP_OFFSET = {
-  x: -300,
-  y: -320
+const HOME_MAP = {
+  OFFSET: {
+    x: -300,
+    y: -320
+  },
+  TILE_WIDTH: 34,
+  ZOOM_LEVEL: 225
 };
 
 const SPEED = 3;
-const WORLD_MAP_TILE_WIDTH = 30;
-const HOME_MAP_TILE_WIDTH = 34;
 
 export default {
   data() {
@@ -91,29 +97,29 @@ export default {
 
     this.boundaries = this.createBoundaries(
       boundariesData,
-      WORLD_MAP_OFFSET,
-      WORLD_MAP_TILE_WIDTH,
+      WORLD_MAP.OFFSET,
+      WORLD_MAP.TILE_WIDTH,
       64,
       1049
     );
     this.entrances = this.createBoundaries(
       homeData,
-      WORLD_MAP_OFFSET,
-      WORLD_MAP_TILE_WIDTH,
+      WORLD_MAP.OFFSET,
+      WORLD_MAP.TILE_WIDTH,
       64,
       1050
     );
     this.homeExits = this.createBoundaries(
       homeExitData,
-      HOME_MAP_OFFSET,
-      HOME_MAP_TILE_WIDTH,
+      HOME_MAP.OFFSET,
+      HOME_MAP.TILE_WIDTH,
       36,
       8034
     );
     this.homeBoundaries = this.createBoundaries(
       homeBoundariesData,
-      HOME_MAP_OFFSET,
-      HOME_MAP_TILE_WIDTH,
+      HOME_MAP.OFFSET,
+      HOME_MAP.TILE_WIDTH,
       36,
       8033
     );
@@ -125,8 +131,8 @@ export default {
       context,
       image: mapImage,
       position: {
-        x: WORLD_MAP_OFFSET.x,
-        y: WORLD_MAP_OFFSET.y
+        x: WORLD_MAP.OFFSET.x,
+        y: WORLD_MAP.OFFSET.y
       }
     });
 
@@ -137,8 +143,8 @@ export default {
       context,
       image: homeMap,
       position: {
-        x: HOME_MAP_OFFSET.x,
-        y: HOME_MAP_OFFSET.y
+        x: HOME_MAP.OFFSET.x,
+        y: HOME_MAP.OFFSET.y
       }
     });
 
@@ -149,8 +155,8 @@ export default {
       context,
       image: foregroundObjects,
       position: {
-        x: WORLD_MAP_OFFSET.x,
-        y: WORLD_MAP_OFFSET.y
+        x: WORLD_MAP.OFFSET.x,
+        y: WORLD_MAP.OFFSET.y
       }
     });
 
