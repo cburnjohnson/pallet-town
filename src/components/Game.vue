@@ -20,6 +20,7 @@ import Boundary from '@/classes/Boundary';
 import boundariesData from '@/data/boundariesData';
 import homeData from '@/data/homeData';
 import homeExitData from '@/data/homeExitData';
+import homeBoundariesData from '@/data/homeBoundariesData';
 
 export let context;
 let lastKeyPressed;
@@ -38,13 +39,19 @@ const keys = {
   }
 };
 
-const mapOffset = {
+const WORLD_MAP_OFFSET = {
   x: -300,
   y: -450
 };
 
+const HOME_MAP_OFFSET = {
+  x: -300,
+  y: -320
+};
+
 const SPEED = 3;
-const TOTAL_AMOUNT_OF_TILES_WIDE = 30;
+const WORLD_MAP_TILE_WIDTH = 30;
+const HOME_MAP_TILE_WIDTH = 34;
 
 export default {
   data() {
@@ -55,6 +62,7 @@ export default {
       foregroundObjects: null,
       player: null,
       boundaries: [],
+      homeBoundaries: [],
       entrances: [],
       homeExits: [],
       mapAnimationFrame: null,
@@ -71,7 +79,7 @@ export default {
       ];
     },
     buildingMovables() {
-      return [this.homeMap, ...this.homeExits];
+      return [this.homeMap, ...this.homeBoundaries, ...this.homeExits];
     }
   },
   mounted() {
@@ -81,9 +89,34 @@ export default {
     this.gameCanvas.width = 840;
     this.gameCanvas.height = 800;
 
-    this.boundaries = this.createBoundaries(boundariesData, 1049);
-    this.entrances = this.createBoundaries(homeData, 1050);
-    this.homeExits = this.createBoundaries(homeExitData, 8034);
+    this.boundaries = this.createBoundaries(
+      boundariesData,
+      WORLD_MAP_OFFSET,
+      WORLD_MAP_TILE_WIDTH,
+      64,
+      1049
+    );
+    this.entrances = this.createBoundaries(
+      homeData,
+      WORLD_MAP_OFFSET,
+      WORLD_MAP_TILE_WIDTH,
+      64,
+      1050
+    );
+    this.homeExits = this.createBoundaries(
+      homeExitData,
+      HOME_MAP_OFFSET,
+      HOME_MAP_TILE_WIDTH,
+      36,
+      8034
+    );
+    this.homeBoundaries = this.createBoundaries(
+      homeBoundariesData,
+      HOME_MAP_OFFSET,
+      HOME_MAP_TILE_WIDTH,
+      36,
+      8033
+    );
 
     const mapImage = new Image();
     mapImage.src = mapImageAsset;
@@ -92,8 +125,8 @@ export default {
       context,
       image: mapImage,
       position: {
-        x: mapOffset.x,
-        y: mapOffset.y
+        x: WORLD_MAP_OFFSET.x,
+        y: WORLD_MAP_OFFSET.y
       }
     });
 
@@ -104,8 +137,8 @@ export default {
       context,
       image: homeMap,
       position: {
-        x: mapOffset.x,
-        y: mapOffset.y
+        x: HOME_MAP_OFFSET.x,
+        y: HOME_MAP_OFFSET.y
       }
     });
 
@@ -116,8 +149,8 @@ export default {
       context,
       image: foregroundObjects,
       position: {
-        x: mapOffset.x,
-        y: mapOffset.y
+        x: WORLD_MAP_OFFSET.x,
+        y: WORLD_MAP_OFFSET.y
       }
     });
 
@@ -345,6 +378,10 @@ export default {
 
       this.homeMap.draw();
 
+      this.homeBoundaries.forEach((boundary) => {
+        boundary.draw();
+      });
+
       this.homeExits.forEach((homeExit) => {
         homeExit.draw();
       });
@@ -422,10 +459,10 @@ export default {
       cancelAnimationFrame(this.homeAnimationFrame);
       this.animate();
     },
-    createBoundaries(data, symbolNumber) {
+    createBoundaries(data, mapOffset, mapTileWidth, bw, symbolNumber) {
       const boundariesMap = [];
-      for (let i = 0; i < data.length; i += TOTAL_AMOUNT_OF_TILES_WIDE) {
-        boundariesMap.push(data.slice(i, i + TOTAL_AMOUNT_OF_TILES_WIDE));
+      for (let i = 0; i < data.length; i += mapTileWidth) {
+        boundariesMap.push(data.slice(i, i + mapTileWidth));
       }
 
       const boundaries = [];
@@ -438,8 +475,8 @@ export default {
           boundaries.push(
             new Boundary({
               position: {
-                x: j * Boundary.width + mapOffset.x,
-                y: i * Boundary.height + mapOffset.y
+                x: j * bw + mapOffset.x,
+                y: i * bw + mapOffset.y
               }
             })
           );
