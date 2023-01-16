@@ -10,7 +10,8 @@
 <script>
 import mapImageAsset from '@/assets/imgs/worldMap.png';
 import homeMapImageAsset from '@/assets/imgs/homeMap.png';
-import foregroundObjectsAsset from '@/assets/imgs/foreground-objects.png';
+import labMapImageAsset from '@/assets/imgs/labMap.png';
+import foregroundObjectsAsset from '@/assets/imgs/worldForegroundObjects.png';
 import playerDownImageAsset from '@/assets/sprites/player/red-down.png';
 import playerLeftImageAsset from '@/assets/sprites/player/red-left.png';
 import playerRightImageAsset from '@/assets/sprites/player/red-right.png';
@@ -19,8 +20,10 @@ import Sprite from '@/classes/Sprite';
 import Boundary from '@/classes/Boundary';
 import MapData from '@/classes/MapData';
 import boundariesData from '@/data/boundariesData';
-import homeData from '@/data/homeData';
+import labBoundariesData from '@/data/labBoundariesData';
+import entrancesData from '@/data/entrancesData';
 import homeExitData from '@/data/homeExitData';
+import labExitData from '@/data/labExitData';
 import homeBoundariesData from '@/data/homeBoundariesData';
 
 export let context;
@@ -58,7 +61,21 @@ const HOME_MAP = {
   ZOOM_LEVEL: 225
 };
 
+const LAB_MAP = {
+  OFFSET: {
+    x: -160,
+    y: -410
+  },
+  TILE_WIDTH: 34,
+  ZOOM_LEVEL: 225
+};
+
 const SPEED = 3;
+
+const SYMBOL_NUMBER_TO_MAP = {
+  1050: 'HOME_MAP',
+  1051: 'LAB_MAP'
+};
 
 export default {
   data() {
@@ -83,28 +100,42 @@ export default {
       WORLD_MAP.OFFSET,
       WORLD_MAP.TILE_WIDTH,
       64,
-      1049
+      [1049]
     );
     const entrances = this.createBoundaries(
-      homeData,
+      entrancesData,
       WORLD_MAP.OFFSET,
       WORLD_MAP.TILE_WIDTH,
       64,
-      1050
+      [1050, 1051]
     );
     const homeExits = this.createBoundaries(
       homeExitData,
       HOME_MAP.OFFSET,
       HOME_MAP.TILE_WIDTH,
       36,
-      8034
+      [8034]
+    );
+    const labExits = this.createBoundaries(
+      labExitData,
+      LAB_MAP.OFFSET,
+      LAB_MAP.TILE_WIDTH,
+      36,
+      [8033]
     );
     const homeBoundaries = this.createBoundaries(
       homeBoundariesData,
       HOME_MAP.OFFSET,
       HOME_MAP.TILE_WIDTH,
       36,
-      8033
+      [8033]
+    );
+    const labBoundaries = this.createBoundaries(
+      labBoundariesData,
+      LAB_MAP.OFFSET,
+      LAB_MAP.TILE_WIDTH,
+      36,
+      [8034]
     );
 
     const mapImage = new Image();
@@ -113,6 +144,18 @@ export default {
     const worldMap = new Sprite({
       context,
       image: mapImage,
+      position: {
+        x: WORLD_MAP.OFFSET.x,
+        y: WORLD_MAP.OFFSET.y
+      }
+    });
+
+    const worldForegroundObjectsImage = new Image();
+    worldForegroundObjectsImage.src = foregroundObjectsAsset;
+
+    const worldForegroundObjects = new Sprite({
+      context,
+      image: worldForegroundObjectsImage,
       position: {
         x: WORLD_MAP.OFFSET.x,
         y: WORLD_MAP.OFFSET.y
@@ -131,15 +174,15 @@ export default {
       }
     });
 
-    const worldForegroundObjectsImage = new Image();
-    worldForegroundObjectsImage.src = foregroundObjectsAsset;
+    const labMapImage = new Image();
+    labMapImage.src = labMapImageAsset;
 
-    const worldForegroundObjects = new Sprite({
+    const labMap = new Sprite({
       context,
-      image: worldForegroundObjectsImage,
+      image: labMapImage,
       position: {
-        x: WORLD_MAP.OFFSET.x,
-        y: WORLD_MAP.OFFSET.y
+        x: LAB_MAP.OFFSET.x,
+        y: LAB_MAP.OFFSET.y
       }
     });
 
@@ -192,6 +235,14 @@ export default {
       foregroundObjects: worldForegroundObjects,
       exits: homeExits,
       movables: [homeMap, ...homeBoundaries, ...homeExits]
+    });
+
+    this.labMapData = new MapData({
+      map: labMap,
+      boundaries: labBoundaries,
+      foregroundObjects: worldForegroundObjects,
+      exits: labExits,
+      movables: [labMap, ...labBoundaries, ...labExits]
     });
 
     this.activeMapData = this.worldMapData;
@@ -313,7 +364,25 @@ export default {
               }
             })
           ) {
-            this.enterBuilding();
+            const newMapName = SYMBOL_NUMBER_TO_MAP[entrance.symbolNumber];
+            let newMapData;
+
+            switch (newMapName) {
+              case 'HOME_MAP':
+                newMapData = this.homeMapData;
+
+                break;
+
+              case 'LAB_MAP':
+                newMapData = this.labMapData;
+
+                break;
+
+              default:
+                break;
+            }
+
+            this.setActiveMapData(newMapData);
             return;
           }
         }
@@ -376,7 +445,7 @@ export default {
               }
             })
           ) {
-            this.leaveBuilding();
+            this.setActiveMapData(this.worldMapData);
             return;
           }
         }
@@ -418,13 +487,10 @@ export default {
         rectangle1.position.y + rectangle1.height >= rectangle2.position.y
       );
     },
-    enterBuilding() {
-      this.activeMapData = this.homeMapData;
+    setActiveMapData(mapData) {
+      this.activeMapData = mapData;
     },
-    leaveBuilding() {
-      this.activeMapData = this.worldMapData;
-    },
-    createBoundaries(data, mapOffset, mapTileWidth, bw, symbolNumber) {
+    createBoundaries(data, mapOffset, mapTileWidth, bw, symbolNumbers) {
       const boundariesMap = [];
       for (let i = 0; i < data.length; i += mapTileWidth) {
         boundariesMap.push(data.slice(i, i + mapTileWidth));
@@ -433,7 +499,10 @@ export default {
       const boundaries = [];
       boundariesMap.forEach((row, i) => {
         row.forEach((boundary, j) => {
-          if (boundary !== symbolNumber) {
+          const symbolNumber = symbolNumbers.find(
+            (symbolNumber) => symbolNumber === boundary
+          );
+          if (!symbolNumber) {
             return;
           }
 
@@ -442,7 +511,8 @@ export default {
               position: {
                 x: j * bw + mapOffset.x,
                 y: i * bw + mapOffset.y
-              }
+              },
+              symbolNumber
             })
           );
         });
