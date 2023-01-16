@@ -12,6 +12,8 @@ import mapImageAsset from '@/assets/imgs/worldMap.png';
 import homeMapImageAsset from '@/assets/imgs/homeMap.png';
 import labMapImageAsset from '@/assets/imgs/labMap.png';
 import foregroundObjectsAsset from '@/assets/imgs/worldForegroundObjects.png';
+import homeForegroundObjectsImageAsset from '@/assets/imgs/homeForegroundObjects.png';
+import labForegroundObjectsImageAsset from '@/assets/imgs/labForegroundObjects.png';
 import playerDownImageAsset from '@/assets/sprites/player/red-down.png';
 import playerLeftImageAsset from '@/assets/sprites/player/red-left.png';
 import playerRightImageAsset from '@/assets/sprites/player/red-right.png';
@@ -95,49 +97,7 @@ export default {
     this.gameCanvas.width = 840;
     this.gameCanvas.height = 800;
 
-    const worldBoundaries = this.createBoundaries(
-      boundariesData,
-      WORLD_MAP.OFFSET,
-      WORLD_MAP.TILE_WIDTH,
-      64,
-      [1049]
-    );
-    const entrances = this.createBoundaries(
-      entrancesData,
-      WORLD_MAP.OFFSET,
-      WORLD_MAP.TILE_WIDTH,
-      64,
-      [1050, 1051]
-    );
-    const homeExits = this.createBoundaries(
-      homeExitData,
-      HOME_MAP.OFFSET,
-      HOME_MAP.TILE_WIDTH,
-      36,
-      [8034]
-    );
-    const labExits = this.createBoundaries(
-      labExitData,
-      LAB_MAP.OFFSET,
-      LAB_MAP.TILE_WIDTH,
-      36,
-      [8033]
-    );
-    const homeBoundaries = this.createBoundaries(
-      homeBoundariesData,
-      HOME_MAP.OFFSET,
-      HOME_MAP.TILE_WIDTH,
-      36,
-      [8033]
-    );
-    const labBoundaries = this.createBoundaries(
-      labBoundariesData,
-      LAB_MAP.OFFSET,
-      LAB_MAP.TILE_WIDTH,
-      36,
-      [8034]
-    );
-
+    // World Map Creation
     const mapImage = new Image();
     mapImage.src = mapImageAsset;
 
@@ -162,6 +122,35 @@ export default {
       }
     });
 
+    const worldBoundaries = this.createBoundaries(
+      boundariesData,
+      WORLD_MAP.OFFSET,
+      WORLD_MAP.TILE_WIDTH,
+      64,
+      [1049]
+    );
+    const entrances = this.createBoundaries(
+      entrancesData,
+      WORLD_MAP.OFFSET,
+      WORLD_MAP.TILE_WIDTH,
+      64,
+      [1050, 1051]
+    );
+
+    this.worldMapData = new MapData({
+      map: worldMap,
+      boundaries: worldBoundaries,
+      foregroundObjects: worldForegroundObjects,
+      entrances: entrances,
+      movables: [
+        worldMap,
+        worldForegroundObjects,
+        ...worldBoundaries,
+        ...entrances
+      ]
+    });
+
+    // Home Map Creation
     const homeMapImage = new Image();
     homeMapImage.src = homeMapImageAsset;
 
@@ -174,6 +163,47 @@ export default {
       }
     });
 
+    const homeForegroundObjectsImage = new Image();
+    homeForegroundObjectsImage.src = homeForegroundObjectsImageAsset;
+
+    const homeForegroundObjects = new Sprite({
+      context,
+      image: homeForegroundObjectsImage,
+      position: {
+        x: HOME_MAP.OFFSET.x,
+        y: HOME_MAP.OFFSET.y
+      }
+    });
+
+    const homeExits = this.createBoundaries(
+      homeExitData,
+      HOME_MAP.OFFSET,
+      HOME_MAP.TILE_WIDTH,
+      36,
+      [8034]
+    );
+    const homeBoundaries = this.createBoundaries(
+      homeBoundariesData,
+      HOME_MAP.OFFSET,
+      HOME_MAP.TILE_WIDTH,
+      36,
+      [8033]
+    );
+
+    this.homeMapData = new MapData({
+      map: homeMap,
+      boundaries: homeBoundaries,
+      foregroundObjects: homeForegroundObjects,
+      exits: homeExits,
+      movables: [
+        homeMap,
+        ...homeBoundaries,
+        ...homeExits,
+        homeForegroundObjects
+      ]
+    });
+
+    // Lab Map Creation
     const labMapImage = new Image();
     labMapImage.src = labMapImageAsset;
 
@@ -186,6 +216,42 @@ export default {
       }
     });
 
+    const labForegroundObjectsImage = new Image();
+    labForegroundObjectsImage.src = labForegroundObjectsImageAsset;
+
+    const labForegroundObjects = new Sprite({
+      context,
+      image: labForegroundObjectsImage,
+      position: {
+        x: LAB_MAP.OFFSET.x,
+        y: LAB_MAP.OFFSET.y
+      }
+    });
+
+    const labBoundaries = this.createBoundaries(
+      labBoundariesData,
+      LAB_MAP.OFFSET,
+      LAB_MAP.TILE_WIDTH,
+      36,
+      [8034]
+    );
+    const labExits = this.createBoundaries(
+      labExitData,
+      LAB_MAP.OFFSET,
+      LAB_MAP.TILE_WIDTH,
+      36,
+      [8033]
+    );
+
+    this.labMapData = new MapData({
+      map: labMap,
+      boundaries: labBoundaries,
+      foregroundObjects: labForegroundObjects,
+      exits: labExits,
+      movables: [labMap, ...labBoundaries, ...labExits, labForegroundObjects]
+    });
+
+    // Player Creation
     const playerDownImage = new Image();
     playerDownImage.src = playerDownImageAsset;
 
@@ -216,35 +282,7 @@ export default {
       }
     });
 
-    this.worldMapData = new MapData({
-      map: worldMap,
-      boundaries: worldBoundaries,
-      foregroundObjects: worldForegroundObjects,
-      entrances: entrances,
-      movables: [
-        worldMap,
-        worldForegroundObjects,
-        ...worldBoundaries,
-        ...entrances
-      ]
-    });
-
-    this.homeMapData = new MapData({
-      map: homeMap,
-      boundaries: homeBoundaries,
-      foregroundObjects: worldForegroundObjects,
-      exits: homeExits,
-      movables: [homeMap, ...homeBoundaries, ...homeExits]
-    });
-
-    this.labMapData = new MapData({
-      map: labMap,
-      boundaries: labBoundaries,
-      foregroundObjects: worldForegroundObjects,
-      exits: labExits,
-      movables: [labMap, ...labBoundaries, ...labExits]
-    });
-
+    // Setting initial map
     this.activeMapData = this.worldMapData;
 
     this.animate();
