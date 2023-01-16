@@ -275,6 +275,10 @@ export default {
         entrance.draw();
       });
 
+      exits.forEach((exit) => {
+        exit.draw();
+      });
+
       this.player.draw();
       foregroundObjects.draw();
 
