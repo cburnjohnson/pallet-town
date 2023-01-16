@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import mapImageAsset from '@/assets/imgs/game-portfolio-map.png';
+import mapImageAsset from '@/assets/imgs/worldMap.png';
 import homeMapImageAsset from '@/assets/imgs/homeMap.png';
 import foregroundObjectsAsset from '@/assets/imgs/foreground-objects.png';
 import playerDownImageAsset from '@/assets/sprites/player/red-down.png';
@@ -17,6 +17,7 @@ import playerRightImageAsset from '@/assets/sprites/player/red-right.png';
 import playerUpImageAsset from '@/assets/sprites/player/red-up.png';
 import Sprite from '@/classes/Sprite';
 import Boundary from '@/classes/Boundary';
+import MapData from '@/classes/MapData';
 import boundariesData from '@/data/boundariesData';
 import homeData from '@/data/homeData';
 import homeExitData from '@/data/homeExitData';
@@ -63,30 +64,12 @@ export default {
   data() {
     return {
       gameCanvas: null,
-      map: null,
-      homeMap: null,
-      foregroundObjects: null,
       player: null,
-      boundaries: [],
-      homeBoundaries: [],
-      entrances: [],
-      homeExits: [],
       mapAnimationFrame: null,
-      homeAnimationFrame: null
+      activeMapData: null,
+      worldMapData: null,
+      homeMapData: null
     };
-  },
-  computed: {
-    worldMovables() {
-      return [
-        this.map,
-        this.foregroundObjects,
-        ...this.boundaries,
-        ...this.entrances
-      ];
-    },
-    buildingMovables() {
-      return [this.homeMap, ...this.homeBoundaries, ...this.homeExits];
-    }
   },
   mounted() {
     this.gameCanvas = document.querySelector('#gameCanvas');
@@ -95,28 +78,28 @@ export default {
     this.gameCanvas.width = 840;
     this.gameCanvas.height = 800;
 
-    this.boundaries = this.createBoundaries(
+    const worldBoundaries = this.createBoundaries(
       boundariesData,
       WORLD_MAP.OFFSET,
       WORLD_MAP.TILE_WIDTH,
       64,
       1049
     );
-    this.entrances = this.createBoundaries(
+    const entrances = this.createBoundaries(
       homeData,
       WORLD_MAP.OFFSET,
       WORLD_MAP.TILE_WIDTH,
       64,
       1050
     );
-    this.homeExits = this.createBoundaries(
+    const homeExits = this.createBoundaries(
       homeExitData,
       HOME_MAP.OFFSET,
       HOME_MAP.TILE_WIDTH,
       36,
       8034
     );
-    this.homeBoundaries = this.createBoundaries(
+    const homeBoundaries = this.createBoundaries(
       homeBoundariesData,
       HOME_MAP.OFFSET,
       HOME_MAP.TILE_WIDTH,
@@ -127,7 +110,7 @@ export default {
     const mapImage = new Image();
     mapImage.src = mapImageAsset;
 
-    this.map = new Sprite({
+    const worldMap = new Sprite({
       context,
       image: mapImage,
       position: {
@@ -136,24 +119,24 @@ export default {
       }
     });
 
-    const homeMap = new Image();
-    homeMap.src = homeMapImageAsset;
+    const homeMapImage = new Image();
+    homeMapImage.src = homeMapImageAsset;
 
-    this.homeMap = new Sprite({
+    const homeMap = new Sprite({
       context,
-      image: homeMap,
+      image: homeMapImage,
       position: {
         x: HOME_MAP.OFFSET.x,
         y: HOME_MAP.OFFSET.y
       }
     });
 
-    const foregroundObjects = new Image();
-    foregroundObjects.src = foregroundObjectsAsset;
+    const worldForegroundObjectsImage = new Image();
+    worldForegroundObjectsImage.src = foregroundObjectsAsset;
 
-    this.foregroundObjects = new Sprite({
+    const worldForegroundObjects = new Sprite({
       context,
-      image: foregroundObjects,
+      image: worldForegroundObjectsImage,
       position: {
         x: WORLD_MAP.OFFSET.x,
         y: WORLD_MAP.OFFSET.y
@@ -189,6 +172,29 @@ export default {
         max: 4
       }
     });
+
+    this.worldMapData = new MapData({
+      map: worldMap,
+      boundaries: worldBoundaries,
+      foregroundObjects: worldForegroundObjects,
+      entrances: entrances,
+      movables: [
+        worldMap,
+        worldForegroundObjects,
+        ...worldBoundaries,
+        ...entrances
+      ]
+    });
+
+    this.homeMapData = new MapData({
+      map: homeMap,
+      boundaries: homeBoundaries,
+      foregroundObjects: worldForegroundObjects,
+      exits: homeExits,
+      movables: [homeMap, ...homeBoundaries, ...homeExits]
+    });
+
+    this.activeMapData = this.worldMapData;
 
     this.animate();
     this.addEventListeners();
@@ -255,25 +261,29 @@ export default {
     },
     animate() {
       this.mapAnimationFrame = window.requestAnimationFrame(this.animate);
-      this.map.draw();
 
-      this.boundaries.forEach((boundary) => {
+      const { map, boundaries, entrances, exits, foregroundObjects, movables } =
+        this.activeMapData;
+
+      map.draw();
+
+      boundaries.forEach((boundary) => {
         boundary.draw();
       });
 
-      this.entrances.forEach((entrance) => {
+      entrances.forEach((entrance) => {
         entrance.draw();
       });
 
       this.player.draw();
-      this.foregroundObjects.draw();
+      foregroundObjects.draw();
 
       this.player.moving = false;
 
       if (keys.w.pressed && lastKeyPressed === 'w') {
         // stop movement if running into a boundary
-        for (let i = 0; i < this.boundaries.length; i++) {
-          const boundary = this.boundaries[i];
+        for (let i = 0; i < boundaries.length; i++) {
+          const boundary = boundaries[i];
           if (
             this.rectangularCollision(this.player, {
               ...boundary,
@@ -288,8 +298,8 @@ export default {
         }
 
         // check if player is going into an entrance
-        for (let i = 0; i < this.entrances.length; i++) {
-          const entrance = this.entrances[i];
+        for (let i = 0; i < entrances.length; i++) {
+          const entrance = entrances[i];
           if (
             this.rectangularCollision(this.player, {
               ...entrance,
@@ -307,13 +317,13 @@ export default {
         this.player.moving = true;
         this.player.image = this.player.sprites.up;
 
-        this.worldMovables.forEach((movable) => (movable.position.y += SPEED));
+        movables.forEach((movable) => (movable.position.y += SPEED));
       }
 
       if (keys.a.pressed && lastKeyPressed === 'a') {
         // stop movement if running into a boundary
-        for (let i = 0; i < this.boundaries.length; i++) {
-          const boundary = this.boundaries[i];
+        for (let i = 0; i < boundaries.length; i++) {
+          const boundary = boundaries[i];
           if (
             this.rectangularCollision(this.player, {
               ...boundary,
@@ -330,13 +340,13 @@ export default {
         this.player.moving = true;
         this.player.image = this.player.sprites.left;
 
-        this.worldMovables.forEach((movable) => (movable.position.x += SPEED));
+        movables.forEach((movable) => (movable.position.x += SPEED));
       }
 
       if (keys.s.pressed && lastKeyPressed === 's') {
         // stop movement if running into a boundary
-        for (let i = 0; i < this.boundaries.length; i++) {
-          const boundary = this.boundaries[i];
+        for (let i = 0; i < boundaries.length; i++) {
+          const boundary = boundaries[i];
           if (
             this.rectangularCollision(this.player, {
               ...boundary,
@@ -350,16 +360,33 @@ export default {
           }
         }
 
+        // check if player is going into an exit
+        for (let i = 0; i < exits.length; i++) {
+          const exit = exits[i];
+          if (
+            this.rectangularCollision(this.player, {
+              ...exit,
+              position: {
+                x: exit.position.x,
+                y: exit.position.y - SPEED
+              }
+            })
+          ) {
+            this.leaveBuilding();
+            return;
+          }
+        }
+
         this.player.moving = true;
         this.player.image = this.player.sprites.down;
 
-        this.worldMovables.forEach((movable) => (movable.position.y -= SPEED));
+        movables.forEach((movable) => (movable.position.y -= SPEED));
       }
 
       if (keys.d.pressed && lastKeyPressed === 'd') {
         // stop movement if running into a boundary
-        for (let i = 0; i < this.boundaries.length; i++) {
-          const boundary = this.boundaries[i];
+        for (let i = 0; i < boundaries.length; i++) {
+          const boundary = boundaries[i];
           if (
             this.rectangularCollision(this.player, {
               ...boundary,
@@ -376,77 +403,7 @@ export default {
         this.player.moving = true;
         this.player.image = this.player.sprites.right;
 
-        this.worldMovables.forEach((movable) => (movable.position.x -= SPEED));
-      }
-    },
-    animateHome() {
-      this.homeAnimationFrame = window.requestAnimationFrame(this.animateHome);
-
-      this.homeMap.draw();
-
-      this.homeBoundaries.forEach((boundary) => {
-        boundary.draw();
-      });
-
-      this.homeExits.forEach((homeExit) => {
-        homeExit.draw();
-      });
-
-      this.player.draw();
-
-      this.player.moving = false;
-
-      if (keys.w.pressed && lastKeyPressed === 'w') {
-        this.player.moving = true;
-        this.player.image = this.player.sprites.up;
-
-        this.buildingMovables.forEach(
-          (movable) => (movable.position.y += SPEED)
-        );
-      }
-
-      if (keys.a.pressed && lastKeyPressed === 'a') {
-        this.player.moving = true;
-        this.player.image = this.player.sprites.left;
-
-        this.buildingMovables.forEach(
-          (movable) => (movable.position.x += SPEED)
-        );
-      }
-
-      if (keys.s.pressed && lastKeyPressed === 's') {
-        // check if player is going into an exit
-        for (let i = 0; i < this.homeExits.length; i++) {
-          const homeExit = this.homeExits[i];
-          if (
-            this.rectangularCollision(this.player, {
-              ...homeExit,
-              position: {
-                x: homeExit.position.x,
-                y: homeExit.position.y - SPEED
-              }
-            })
-          ) {
-            this.leaveBuilding();
-            return;
-          }
-        }
-
-        this.player.moving = true;
-        this.player.image = this.player.sprites.down;
-
-        this.buildingMovables.forEach(
-          (movable) => (movable.position.y -= SPEED)
-        );
-      }
-
-      if (keys.d.pressed && lastKeyPressed === 'd') {
-        this.player.moving = true;
-        this.player.image = this.player.sprites.right;
-
-        this.buildingMovables.forEach(
-          (movable) => (movable.position.x -= SPEED)
-        );
+        movables.forEach((movable) => (movable.position.x -= SPEED));
       }
     },
     rectangularCollision(rectangle1, rectangle2) {
@@ -458,12 +415,10 @@ export default {
       );
     },
     enterBuilding() {
-      cancelAnimationFrame(this.mapAnimationFrame);
-      this.animateHome();
+      this.activeMapData = this.homeMapData;
     },
     leaveBuilding() {
-      cancelAnimationFrame(this.homeAnimationFrame);
-      this.animate();
+      this.activeMapData = this.worldMapData;
     },
     createBoundaries(data, mapOffset, mapTileWidth, bw, symbolNumber) {
       const boundariesMap = [];
