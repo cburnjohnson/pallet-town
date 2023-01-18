@@ -28,6 +28,8 @@ import entrancesData from '@/data/entrancesData';
 import homeExitData from '@/data/homeExitData';
 import labExitData from '@/data/labExitData';
 import homeBoundariesData from '@/data/homeBoundariesData';
+import useStore from '@/store';
+import { mapState } from 'pinia';
 
 export let context;
 let lastKeyPressed;
@@ -312,6 +314,9 @@ export default {
     this.animate();
     this.addEventListeners();
   },
+  computed: {
+    ...mapState(useStore, ['isDialogActive'])
+  },
   methods: {
     addEventListeners() {
       window.addEventListener('keydown', (event) => {
@@ -337,6 +342,11 @@ export default {
           case 'd':
             keys.d.pressed = true;
             lastKeyPressed = 'd';
+
+            break;
+
+          case 'e':
+            this.interact();
 
             break;
 
@@ -549,6 +559,19 @@ export default {
 
         movables.forEach((movable) => (movable.position.x -= SPEED));
       }
+    },
+    interact() {
+      const npc = this.activeMapData.npcs.find((npc) =>
+        this.rectangularCollision(this.player, npc)
+      );
+
+      if (npc) {
+        this.startInteraction();
+      }
+    },
+    startInteraction() {
+      console.log('interaction'); //eslint-disable-line
+      this.isDialogActive = true;
     },
     rectangularCollision(rectangle1, rectangle2) {
       return (
