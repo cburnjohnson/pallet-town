@@ -18,6 +18,7 @@ import playerDownImageAsset from '@/assets/sprites/player/red-down.png';
 import playerLeftImageAsset from '@/assets/sprites/player/red-left.png';
 import playerRightImageAsset from '@/assets/sprites/player/red-right.png';
 import playerUpImageAsset from '@/assets/sprites/player/red-up.png';
+import coleDownImageAsset from '@/assets/sprites/npcs/myDoodDown.png';
 import Sprite from '@/classes/Sprite';
 import Boundary from '@/classes/Boundary';
 import MapData from '@/classes/MapData';
@@ -97,6 +98,58 @@ export default {
     this.gameCanvas.width = 840;
     this.gameCanvas.height = 800;
 
+    // Player Creation
+    const playerDownImage = new Image();
+    playerDownImage.src = playerDownImageAsset;
+
+    const playerUpImage = new Image();
+    playerUpImage.src = playerUpImageAsset;
+
+    const playerLeftImage = new Image();
+    playerLeftImage.src = playerLeftImageAsset;
+
+    const playerRightImage = new Image();
+    playerRightImage.src = playerRightImageAsset;
+
+    this.player = new Sprite({
+      context,
+      image: playerDownImage,
+      sprites: {
+        up: playerUpImage,
+        left: playerLeftImage,
+        right: playerRightImage,
+        down: playerDownImage
+      },
+      position: {
+        x: this.gameCanvas.width / 2 - playerDownImage.width / 4 / 2,
+        y: this.gameCanvas.height / 2
+      },
+      frames: {
+        max: 4
+      }
+    });
+
+    // Cole NPC creation
+    const coleDownImage = new Image();
+    coleDownImage.src = coleDownImageAsset;
+
+    const coleNPC = new Sprite({
+      context,
+      image: coleDownImage,
+      sprites: {
+        down: coleDownImage
+      },
+      position: {
+        x: 550,
+        y: 400
+      },
+      frames: {
+        max: 1
+      }
+    });
+
+    const worldNPCs = [coleNPC];
+
     // World Map Creation
     const mapImage = new Image();
     mapImage.src = mapImageAsset;
@@ -142,11 +195,13 @@ export default {
       boundaries: worldBoundaries,
       foregroundObjects: worldForegroundObjects,
       entrances: entrances,
+      npcs: worldNPCs,
       movables: [
         worldMap,
         worldForegroundObjects,
         ...worldBoundaries,
-        ...entrances
+        ...entrances,
+        ...worldNPCs
       ]
     });
 
@@ -251,37 +306,6 @@ export default {
       movables: [labMap, ...labBoundaries, ...labExits, labForegroundObjects]
     });
 
-    // Player Creation
-    const playerDownImage = new Image();
-    playerDownImage.src = playerDownImageAsset;
-
-    const playerUpImage = new Image();
-    playerUpImage.src = playerUpImageAsset;
-
-    const playerLeftImage = new Image();
-    playerLeftImage.src = playerLeftImageAsset;
-
-    const playerRightImage = new Image();
-    playerRightImage.src = playerRightImageAsset;
-
-    this.player = new Sprite({
-      context,
-      image: playerDownImage,
-      sprites: {
-        up: playerUpImage,
-        left: playerLeftImage,
-        right: playerRightImage,
-        down: playerDownImage
-      },
-      position: {
-        x: this.gameCanvas.width / 2 - playerDownImage.width / 4 / 2,
-        y: this.gameCanvas.height / 2
-      },
-      frames: {
-        max: 4
-      }
-    });
-
     // Setting initial map
     this.activeMapData = this.worldMapData;
 
@@ -351,8 +375,15 @@ export default {
     animate() {
       this.mapAnimationFrame = window.requestAnimationFrame(this.animate);
 
-      const { map, boundaries, entrances, exits, foregroundObjects, movables } =
-        this.activeMapData;
+      const {
+        map,
+        boundaries,
+        entrances,
+        exits,
+        foregroundObjects,
+        movables,
+        npcs
+      } = this.activeMapData;
 
       map.draw();
 
@@ -368,7 +399,9 @@ export default {
         exit.draw();
       });
 
+      npcs.forEach((npc) => npc.draw());
       this.player.draw();
+
       foregroundObjects.draw();
 
       this.player.moving = false;

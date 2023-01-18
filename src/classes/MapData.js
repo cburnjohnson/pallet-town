@@ -5,7 +5,8 @@ export default class MapData {
     foregroundObjects,
     entrances = [],
     exits = [],
-    movables
+    movables,
+    npcs
   }) {
     this.map = map;
     this.boundaries = boundaries;
@@ -13,5 +14,6 @@ export default class MapData {
     this.entrances = entrances;
     this.exits = exits;
     this.movables = movables;
+    this.npcs = npcs;
   }
 }
