@@ -51,6 +51,7 @@
     "space-infix-ops": "error",
     "space-unary-ops": "error",
     "yoda": "error",
-    "vue/multi-word-component-names": 0
+    "vue/multi-word-component-names": 0,
+    "vue/order-in-components": 0
   }
 }
