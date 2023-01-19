@@ -18,6 +18,7 @@ import playerRightImageAsset from '@/assets/sprites/player/red-right.png';
 import playerUpImageAsset from '@/assets/sprites/player/red-up.png';
 import coleDownImageAsset from '@/assets/sprites/npcs/myDoodDown.png';
 import Sprite from '@/classes/Sprite';
+import NPC from '@/classes/NPC';
 import Boundary from '@/classes/Boundary';
 import MapData from '@/classes/MapData';
 import boundariesData from '@/data/boundariesData';
@@ -133,7 +134,7 @@ export default {
     const coleDownImage = new Image();
     coleDownImage.src = coleDownImageAsset;
 
-    const coleNPC = new Sprite({
+    const coleNPC = new NPC({
       context,
       image: coleDownImage,
       sprites: {
@@ -145,6 +146,9 @@ export default {
       },
       frames: {
         max: 1
+      },
+      interactions: {
+        dialog: 'yo'
       }
     });
 
@@ -313,7 +317,7 @@ export default {
     this.addEventListeners();
   },
   computed: {
-    ...mapWritableState(useStore, ['isDialogActive'])
+    ...mapWritableState(useStore, ['interaction'])
   },
   methods: {
     addEventListeners() {
@@ -413,6 +417,10 @@ export default {
       foregroundObjects.draw();
 
       this.player.moving = false;
+
+      if (this.interaction.active) {
+        return;
+      }
 
       if (keys.w.pressed && lastKeyPressed === 'w') {
         // stop movement if running into a boundary
@@ -559,6 +567,11 @@ export default {
       }
     },
     interact() {
+      if (this.interaction.active) {
+        this.endInteraction();
+        return;
+      }
+
       const npc = this.activeMapData.npcs.find((npc) => {
         let npcPositionYDiff = 0;
         let npcPositionXDiff = 0;
@@ -595,11 +608,20 @@ export default {
       });
 
       if (npc) {
-        this.startInteraction();
+        this.startInteraction(npc);
       }
     },
-    startInteraction() {
-      this.isDialogActive = true;
+    startInteraction(npc) {
+      this.interaction = {
+        active: true,
+        npc
+      };
+    },
+    endInteraction() {
+      this.interaction = {
+        active: false,
+        npc: null
+      };
     },
     rectangularCollision(rectangle1, rectangle2) {
       return (

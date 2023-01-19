@@ -2,6 +2,9 @@ import { defineStore } from 'pinia';
 
 export default defineStore('store', {
   state: () => ({
-    isDialogActive: false
+    interaction: {
+      npc: null,
+      active: false
+    }
   })
 });

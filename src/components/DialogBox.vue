@@ -1,11 +1,21 @@
 <template>
   <div class="dialog-box">
-    dialog
+    {{ dialog }}
   </div>
 </template>
 
 <script>
-export default {};
+import useStore from '@/store';
+import { mapState } from 'pinia';
+
+export default {
+  computed: {
+    ...mapState(useStore, ['interaction']),
+    dialog() {
+      return this.interaction.npc.interactions.dialog;
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>

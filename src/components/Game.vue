@@ -2,7 +2,7 @@
   <div class="game">
     <GameCanvas />
 
-    <DialogBox v-if="isDialogActive" />
+    <DialogBox v-if="interaction.active" />
   </div>
 </template>
 
@@ -18,7 +18,7 @@ export default {
     DialogBox
   },
   computed: {
-    ...mapState(useStore, ['isDialogActive'])
+    ...mapState(useStore, ['interaction'])
   }
 };
 </script>
@@ -27,6 +27,6 @@ export default {
 .game {
   margin: 0 auto;
   position: relative;
-  max-width: 800px;
+  max-width: 840px;
 }
 </style>
