@@ -2,7 +2,7 @@
   <div class="game">
     <GameCanvas />
 
-    <DialogBox v-if="interaction.active" />
+    <DialogBox v-if="activeNPC" />
   </div>
 </template>
 
@@ -18,7 +18,7 @@ export default {
     DialogBox
   },
   computed: {
-    ...mapState(useStore, ['interaction'])
+    ...mapState(useStore, ['activeNPC'])
   }
 };
 </script>

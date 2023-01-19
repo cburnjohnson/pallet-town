@@ -148,8 +148,12 @@ export default {
         max: 1
       },
       interactions: {
-        dialog: 'yo'
-      }
+        dialog: [
+          'Hello, I\'m Cole Johnson, a JavaScript specialist in Software Development, delighted to meet you.',
+          'Allow me to share with you my portfolio of accomplished projects.'
+        ]
+      },
+      interactionStep: 0
     });
 
     const worldNPCs = [coleNPC];
@@ -317,7 +321,7 @@ export default {
     this.addEventListeners();
   },
   computed: {
-    ...mapWritableState(useStore, ['interaction'])
+    ...mapWritableState(useStore, ['activeNPC'])
   },
   methods: {
     addEventListeners() {
@@ -418,7 +422,7 @@ export default {
 
       this.player.moving = false;
 
-      if (this.interaction.active) {
+      if (this.activeNPC) {
         return;
       }
 
@@ -567,7 +571,16 @@ export default {
       }
     },
     interact() {
-      if (this.interaction.active) {
+      if (this.activeNPC) {
+        if (
+          this.activeNPC.interactionStep <
+          this.activeNPC.interactions.dialog.length - 1
+        ) {
+          this.activeNPC.interactionStep++;
+
+          return;
+        }
+
         this.endInteraction();
         return;
       }
@@ -612,16 +625,10 @@ export default {
       }
     },
     startInteraction(npc) {
-      this.interaction = {
-        active: true,
-        npc
-      };
+      this.activeNPC = npc;
     },
     endInteraction() {
-      this.interaction = {
-        active: false,
-        npc: null
-      };
+      this.activeNPC = null;
     },
     rectangularCollision(rectangle1, rectangle2) {
       return (
