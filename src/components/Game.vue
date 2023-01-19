@@ -194,7 +194,7 @@ export default {
 
     this.worldMapData = new MapData({
       map: worldMap,
-      boundaries: worldBoundaries,
+      boundaries: [...worldBoundaries, ...worldNPCs],
       foregroundObjects: worldForegroundObjects,
       entrances: entrances,
       npcs: worldNPCs,
@@ -561,9 +561,40 @@ export default {
       }
     },
     interact() {
-      const npc = this.activeMapData.npcs.find((npc) =>
-        this.rectangularCollision(this.player, npc)
-      );
+      const npc = this.activeMapData.npcs.find((npc) => {
+        let npcPositionYDiff = 0;
+        let npcPositionXDiff = 0;
+
+        switch (lastKeyPressed) {
+          case 'w':
+            npcPositionYDiff = SPEED;
+
+            break;
+
+          case 's':
+            npcPositionYDiff = -SPEED;
+
+            break;
+
+          case 'a':
+            npcPositionXDiff = SPEED;
+
+            break;
+
+          case 'd':
+            npcPositionXDiff = -SPEED;
+
+            break;
+        }
+
+        return this.rectangularCollision(this.player, {
+          ...npc,
+          position: {
+            x: npc.position.x + npcPositionXDiff,
+            y: npc.position.y + npcPositionYDiff
+          }
+        });
+      });
 
       if (npc) {
         this.startInteraction();
