@@ -30,7 +30,7 @@ export default {
   width: 96%;
   height: 180px;
   background-color: white;
-  border-radius: 20px;
+  border-radius: $border-radius;
   padding: 20px;
   line-height: 32px;
 }

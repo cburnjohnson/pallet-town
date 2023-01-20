@@ -19,6 +19,7 @@ import playerUpImageAsset from '@/assets/sprites/player/red-up.png';
 import coleDownImageAsset from '@/assets/sprites/npcs/myDoodDown.png';
 import Sprite from '@/classes/Sprite';
 import NPC from '@/classes/NPC';
+import Player from '@/classes/Player';
 import Boundary from '@/classes/Boundary';
 import MapData from '@/classes/MapData';
 import boundariesData from '@/data/boundariesData';
@@ -112,7 +113,7 @@ export default {
     const playerRightImage = new Image();
     playerRightImage.src = playerRightImageAsset;
 
-    this.player = new Sprite({
+    this.player = new Player({
       context,
       image: playerDownImage,
       sprites: {
@@ -151,6 +152,11 @@ export default {
         dialog: [
           'Hello, I\'m Cole Johnson, a JavaScript specialist in Software Development, delighted to meet you.',
           'Allow me to share with you my portfolio of accomplished projects.'
+        ],
+        options: [
+          {
+            name: 'Where To Eat'
+          }
         ]
       },
       interactionStep: 0
@@ -577,6 +583,16 @@ export default {
           this.activeNPC.interactions.dialog.length - 1
         ) {
           this.activeNPC.interactionStep++;
+
+          return;
+        }
+
+        if (
+          this.activeNPC.interactionStep ===
+            this.activeNPC.interactions.dialog.length - 1 &&
+          this.activeNPC.interactions.options.length > 0
+        ) {
+          this.activeNPC.showOptions = true;
 
           return;
         }

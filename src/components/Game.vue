@@ -3,22 +3,28 @@
     <GameCanvas />
 
     <DialogBox v-if="activeNPC" />
+    <Options v-if="showOptions" />
   </div>
 </template>
 
 <script>
 import GameCanvas from '@/components/GameCanvas.vue';
 import DialogBox from '@/components/DialogBox.vue';
+import Options from '@/components/Options.vue';
 import useStore from '@/store';
 import { mapState } from 'pinia';
 
 export default {
   components: {
     GameCanvas,
-    DialogBox
+    DialogBox,
+    Options
   },
   computed: {
-    ...mapState(useStore, ['activeNPC'])
+    ...mapState(useStore, ['activeNPC']),
+    showOptions() {
+      return this.activeNPC?.showOptions;
+    }
   }
 };
 </script>
