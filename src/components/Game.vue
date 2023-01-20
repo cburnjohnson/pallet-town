@@ -23,7 +23,7 @@ export default {
   computed: {
     ...mapState(useStore, ['activeNPC']),
     showOptions() {
-      return this.activeNPC?.showOptions;
+      return this.activeNPC?.interactions.option.show;
     }
   }
 };

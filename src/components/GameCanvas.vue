@@ -153,11 +153,15 @@ export default {
           'Hello, I\'m Cole Johnson, a JavaScript specialist in Software Development, delighted to meet you.',
           'Allow me to share with you my portfolio of accomplished projects.'
         ],
-        options: [
-          {
-            name: 'Where To Eat'
-          }
-        ]
+        option: {
+          show: false,
+          active: null,
+          list: [
+            {
+              name: 'Where To Eat'
+            }
+          ]
+        }
       },
       interactionStep: 0
     });
@@ -590,9 +594,9 @@ export default {
         if (
           this.activeNPC.interactionStep ===
             this.activeNPC.interactions.dialog.length - 1 &&
-          this.activeNPC.interactions.options.length > 0
+          this.activeNPC.interactions.option.list.length > 0
         ) {
-          this.activeNPC.showOptions = true;
+          this.activeNPC.interactions.option.show = true;
 
           return;
         }

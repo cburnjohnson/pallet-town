@@ -7,14 +7,15 @@ export default class NPC extends Sprite {
     image,
     sprites,
     frames = { max: 1, hold: 10 },
-    interactions = { dialog: [], options: [] },
-    interactionStep,
-    showOptions = false
+    interactions = {
+      dialog: [],
+      option: { show: false, active: null, list: [] }
+    },
+    interactionStep
   }) {
     super({ context, position, image, sprites, frames });
 
     this.interactions = interactions;
     this.interactionStep = interactionStep;
-    this.showOptions = showOptions;
   }
 }
