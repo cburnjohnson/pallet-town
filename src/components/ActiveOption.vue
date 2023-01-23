@@ -56,5 +56,23 @@ export default {
   background-color: white;
   padding: 24px;
   border-radius: $border-radius;
+  text-align: center;
+
+  &__body {
+    margin-top: 12px;
+  }
+
+  &__list {
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+    flex-flow: wrap;
+    margin-top: 16px;
+  }
+
+  &__item {
+    min-width: 33.33%;
+    margin-top: 8px;
+  }
 }
 </style>

@@ -55,6 +55,7 @@ export default {
   gap: 16px;
 
   &__list {
+    align-self: flex-start;
     list-style: none;
     background-color: white;
     padding: 24px;
