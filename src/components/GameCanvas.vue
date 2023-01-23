@@ -30,6 +30,7 @@ import labExitData from '@/data/labExitData';
 import homeBoundariesData from '@/data/homeBoundariesData';
 import useStore from '@/store';
 import { mapWritableState } from 'pinia';
+import projects from '@/library/projects';
 
 export let context;
 let lastKeyPressed;
@@ -156,11 +157,7 @@ export default {
         option: {
           show: false,
           active: null,
-          list: [
-            {
-              name: 'Where To Eat'
-            }
-          ]
+          list: projects
         }
       },
       interactionStep: 0

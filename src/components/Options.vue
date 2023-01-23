@@ -14,7 +14,7 @@
     </ul>
 
     <ActiveOption
-      v-if="true"
+      v-if="activeOption"
       :active-option="activeOption"
     />
   </div>

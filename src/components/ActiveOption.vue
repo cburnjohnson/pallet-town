@@ -8,14 +8,32 @@
 
     <div class="active-option__body">
       <p class="active-option__description">
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Soluta quos
-        doloremque, minus sed atque quaerat est rem. Temporibus, inventore
-        perspiciatis.
+        {{ activeOption?.description }}
       </p>
 
-      <ul class="active-option__technologies">
-        <li class="active-option__technology">
-          tech 1
+      <ul class="active-option__list">
+        <li
+          v-for="technology in activeOption?.technologyUsed"
+          :key="technology"
+          class="active-option__item"
+        >
+          {{ technology }}
+        </li>
+      </ul>
+
+      <ul class="active-option__list">
+        <li
+          v-for="link in activeOption?.links"
+          :key="link"
+          class="active-option__item"
+        >
+          <a
+            :href="link.url"
+            class="active-option__link"
+            target="_blank"
+          >
+            {{ link.name }}
+          </a>
         </li>
       </ul>
     </div>
