@@ -11,11 +11,19 @@ import { mapState } from 'pinia';
 export default {
   computed: {
     ...mapState(useStore, ['activeNPC']),
-    interactionStep() {
-      return this.activeNPC.interactionStep;
-    },
     dialog() {
-      return this.activeNPC.interactions.dialog[this.interactionStep];
+      switch (this.activeNPC.activeInteraction) {
+        case 'dialog':
+          return this.activeNPC.interactions.dialog[
+            this.activeNPC.interactionStep
+          ];
+
+        case 'endDialog':
+          return this.activeNPC.interactions.endDialog;
+
+        default:
+          return null;
+      }
     }
   }
 };

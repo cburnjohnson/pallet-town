@@ -158,8 +158,10 @@ export default {
           show: false,
           active: null,
           list: projects
-        }
+        },
+        endDialog: 'Thanks for looking!'
       },
+      activeInteraction: 'dialog',
       interactionStep: 0
     });
 
@@ -591,7 +593,8 @@ export default {
         if (
           this.activeNPC.interactionStep ===
             this.activeNPC.interactions.dialog.length - 1 &&
-          this.activeNPC.interactions.option.list.length > 0
+          this.activeNPC.interactions.option.list.length > 0 &&
+          this.activeNPC.activeInteraction !== 'endDialog'
         ) {
           this.activeNPC.interactions.option.show = true;
 
@@ -641,7 +644,7 @@ export default {
         this.startInteraction(npc);
       }
     },
-    startInteraction(npc) {
+    async startInteraction(npc) {
       this.activeNPC = npc;
     },
     endInteraction() {

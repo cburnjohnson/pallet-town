@@ -14,6 +14,15 @@
           {{ option.name }}
         </button>
       </li>
+
+      <li class="options__item">
+        <button
+          class="options__button"
+          @click="exitOptions"
+        >
+          Exit
+        </button>
+      </li>
     </ul>
 
     <ActiveOption
@@ -47,6 +56,11 @@ export default {
     },
     isOptionActive(optionName) {
       return this.activeOption?.name === optionName;
+    },
+    exitOptions() {
+      this.activeNPC.interactions.option.show = false;
+      this.activeNPC.activeDialog = this.activeNPC.activeInteraction =
+        'endDialog';
     }
   }
 };
