@@ -11,6 +11,9 @@
         {{ activeOption?.description }}
       </p>
 
+      <h2 class="active-option__header active-option__header--2">
+        Technology Used
+      </h2>
       <ul class="active-option__list">
         <li
           v-for="technology in activeOption?.technologyUsed"
@@ -53,10 +56,13 @@ export default {
 
 <style lang="scss" scoped>
 .active-option {
+  @include dialog-border;
+
   background-color: white;
-  padding: 24px;
-  border-radius: $border-radius;
+  padding: 20px;
+  border-radius: 4px;
   text-align: center;
+  margin-right: 16px;
 
   &__body {
     margin-top: 12px;
@@ -73,6 +79,13 @@ export default {
   &__item {
     min-width: 33.33%;
     margin-top: 8px;
+  }
+
+  &__header {
+    &--2 {
+      font-size: 1.3rem;
+      margin-top: 16px;
+    }
   }
 }
 </style>

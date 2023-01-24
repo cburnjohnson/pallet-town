@@ -23,6 +23,8 @@ export default {
 
 <style lang="scss" scoped>
 .dialog-box {
+  @include dialog-border;
+
   position: absolute;
   bottom: 0;
   left: 50%;

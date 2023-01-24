@@ -46,7 +46,7 @@ export default {
       this.activeNPC.interactions.option.active = option;
     },
     isOptionActive(optionName) {
-      return this.activeOption.name === optionName;
+      return this.activeOption?.name === optionName;
     }
   }
 };
