@@ -51,8 +51,8 @@ const keys = {
 
 const WORLD_MAP = {
   OFFSET: {
-    x: -300,
-    y: -450
+    x: -230,
+    y: -530
   },
   TILE_WIDTH: 30,
   ZOOM_LEVEL: 400
@@ -98,8 +98,8 @@ export default {
     this.gameCanvas = document.querySelector('#gameCanvas');
     context = this.gameCanvas.getContext('2d');
 
-    this.gameCanvas.width = 840;
-    this.gameCanvas.height = 800;
+    this.gameCanvas.width = 960;
+    this.gameCanvas.height = 640;
 
     // Player Creation
     const playerDownImage = new Image();
@@ -703,5 +703,6 @@ export default {
 <style lang="scss" scoped>
 .game-canvas {
   display: block;
+  border-radius: 8px;
 }
 </style>

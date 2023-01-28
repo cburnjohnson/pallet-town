@@ -33,6 +33,8 @@ export default {
 .game {
   margin: 0 auto;
   position: relative;
-  max-width: 840px;
+  max-width: 960px;
+  height: 100%;
+  top: 100px;
 }
 </style>
