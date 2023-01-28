@@ -1,10 +1,13 @@
 <template>
   <div class="options">
-    <div class="options__list">
+    <ul class="options__list options__list--option-categories">
       <li
         v-for="optionCategory in optionCategories"
         :key="optionCategory"
-        class="options__item"
+        :class="[
+          'options__item',
+          { 'options__item--active': isOptionCategoryActive(optionCategory) }
+        ]"
       >
         <button
           class="options__button"
@@ -22,11 +25,11 @@
           Exit
         </button>
       </li>
-    </div>
+    </ul>
 
     <ul
       v-if="activeNPCOptions.length > 0"
-      class="options__list"
+      class="options__list options__list--options"
     >
       <li
         v-for="option in activeNPCOptions"
@@ -88,12 +91,16 @@ export default {
     isOptionActive(optionName) {
       return this.activeOption?.name === optionName;
     },
+    isOptionCategoryActive(optionCategory) {
+      return this.activeOptionCategory === optionCategory;
+    },
     exitOptions() {
       this.activeNPC.interactions.option.show = false;
       this.activeNPC.activeInteraction = 'endDialog';
     },
     setActiveOptionCategory(optionCategory) {
       this.activeOptionCategory = optionCategory;
+      this.activeNPC.interactions.option.active = null;
     }
   }
 };
@@ -104,7 +111,10 @@ export default {
   position: absolute;
   top: 16px;
   left: 16px;
-  display: flex;
+  display: grid;
+  grid-template-areas:
+    'optionCategories options .'
+    'activeOption activeOption activeOption';
   gap: 16px;
 
   &__list {
@@ -115,6 +125,14 @@ export default {
     border-radius: 4px;
     border: 4px solid black;
     min-width: 270px;
+
+    &--option-categories {
+      grid-area: optionCategories;
+    }
+
+    &--options {
+      grid-area: options;
+    }
   }
 
   &__item {
