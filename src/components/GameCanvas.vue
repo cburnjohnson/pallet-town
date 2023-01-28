@@ -648,7 +648,12 @@ export default {
       this.activeNPC = npc;
     },
     endInteraction() {
+      this.resetActiveNPCInteractions();
       this.activeNPC = null;
+    },
+    resetActiveNPCInteractions() {
+      this.activeNPC.interactionStep = 0;
+      this.activeNPC.activeInteraction = 'dialog';
     },
     rectangularCollision(rectangle1, rectangle2) {
       return (

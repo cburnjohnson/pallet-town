@@ -59,8 +59,7 @@ export default {
     },
     exitOptions() {
       this.activeNPC.interactions.option.show = false;
-      this.activeNPC.activeDialog = this.activeNPC.activeInteraction =
-        'endDialog';
+      this.activeNPC.activeInteraction = 'endDialog';
     }
   }
 };
