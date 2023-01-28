@@ -1,17 +1,16 @@
 <template>
   <div class="options">
-    <ul class="options__list">
+    <div class="options__list">
       <li
-        v-for="option in npcOptions"
-        :key="option.name"
-        :class="[
-          'options__item',
-          { 'options__item--active': isOptionActive(option.name) }
-        ]"
-        @click="setActiveOption(option)"
+        v-for="optionCategory in optionCategories"
+        :key="optionCategory"
+        class="options__item"
       >
-        <button class="option__button">
-          {{ option.name }}
+        <button
+          class="options__button"
+          @click="setActiveOptionCategory(optionCategory)"
+        >
+          {{ optionCategory }}
         </button>
       </li>
 
@@ -21,6 +20,25 @@
           @click="exitOptions"
         >
           Exit
+        </button>
+      </li>
+    </div>
+
+    <ul
+      v-if="activeNPCOptions.length > 0"
+      class="options__list"
+    >
+      <li
+        v-for="option in activeNPCOptions"
+        :key="option.name"
+        :class="[
+          'options__item',
+          { 'options__item--active': isOptionActive(option.name) }
+        ]"
+        @click="setActiveOption(option)"
+      >
+        <button class="option__button">
+          {{ option.name }}
         </button>
       </li>
     </ul>
@@ -41,6 +59,11 @@ export default {
   components: {
     ActiveOption
   },
+  data() {
+    return {
+      activeOptionCategory: null
+    };
+  },
   computed: {
     ...mapWritableState(useStore, ['activeNPC']),
     npcOptions() {
@@ -48,6 +71,14 @@ export default {
     },
     activeOption() {
       return this.activeNPC.interactions.option.active;
+    },
+    optionCategories() {
+      return this.npcOptions.map((npcOption) => npcOption.category);
+    },
+    activeNPCOptions() {
+      return this.npcOptions.filter(
+        (npcOption) => npcOption.category === this.activeOptionCategory
+      );
     }
   },
   methods: {
@@ -60,6 +91,9 @@ export default {
     exitOptions() {
       this.activeNPC.interactions.option.show = false;
       this.activeNPC.activeInteraction = 'endDialog';
+    },
+    setActiveOptionCategory(optionCategory) {
+      this.activeOptionCategory = optionCategory;
     }
   }
 };
