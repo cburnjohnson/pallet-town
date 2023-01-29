@@ -98,8 +98,7 @@ export default {
     this.gameCanvas = document.querySelector('#gameCanvas');
     context = this.gameCanvas.getContext('2d');
 
-    this.gameCanvas.width = 900;
-    this.gameCanvas.height = 620;
+    this.onResize();
 
     // Player Creation
     const playerDownImage = new Image();
@@ -333,7 +332,17 @@ export default {
     ...mapWritableState(useStore, ['activeNPC'])
   },
   methods: {
+    onResize() {
+      const GAMEBOY_SCREEN_WIDTH_PERCENT = 0.64;
+      const GAMEBOY_SCREEN_HEIGHT_PERCENT = 0.67;
+      const { innerWidth } = window;
+
+      this.gameCanvas.width = innerWidth * GAMEBOY_SCREEN_WIDTH_PERCENT;
+      this.gameCanvas.height =
+        this.gameCanvas.width * GAMEBOY_SCREEN_HEIGHT_PERCENT;
+    },
     addEventListeners() {
+      window.addEventListener('resize', this.onResize);
       window.addEventListener('keydown', (event) => {
         switch (event.key) {
           case 'w':
@@ -703,5 +712,6 @@ export default {
 <style lang="scss" scoped>
 .game-canvas {
   display: block;
+  border-radius: 6px;
 }
 </style>

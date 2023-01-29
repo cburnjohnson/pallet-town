@@ -37,15 +37,15 @@ export default {
   position: relative;
   height: 100%;
   width: 100%;
-  background-image: url('@/assets/gameboyBg.png');
+  background-image: url('@/assets/gameboyBg.svg');
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
 
   &__container {
     position: absolute;
-    top: calc(50% - 10px);
-    left: 50%;
+    top: calc(50% - 74px);
+    left: calc(50% - 5px);
     transform: translate(-50%, -50%);
   }
 }
