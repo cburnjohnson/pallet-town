@@ -1,9 +1,11 @@
 <template>
   <div class="game">
-    <GameCanvas />
+    <div class="game__container">
+      <GameCanvas />
 
-    <DialogBox v-if="activeNPC" />
-    <Options v-if="showOptions" />
+      <DialogBox v-if="activeNPC" />
+      <Options v-if="showOptions" />
+    </div>
   </div>
 </template>
 
@@ -33,8 +35,18 @@ export default {
 .game {
   margin: 0 auto;
   position: relative;
-  max-width: 960px;
   height: 100%;
-  top: 100px;
+  width: 100%;
+  background-image: url('@/assets/gameboyBg.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+
+  &__container {
+    position: absolute;
+    top: calc(50% - 10px);
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
 </style>

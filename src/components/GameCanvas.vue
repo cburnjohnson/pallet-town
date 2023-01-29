@@ -98,8 +98,8 @@ export default {
     this.gameCanvas = document.querySelector('#gameCanvas');
     context = this.gameCanvas.getContext('2d');
 
-    this.gameCanvas.width = 960;
-    this.gameCanvas.height = 640;
+    this.gameCanvas.width = 900;
+    this.gameCanvas.height = 620;
 
     // Player Creation
     const playerDownImage = new Image();
@@ -703,6 +703,5 @@ export default {
 <style lang="scss" scoped>
 .game-canvas {
   display: block;
-  border-radius: 8px;
 }
 </style>
