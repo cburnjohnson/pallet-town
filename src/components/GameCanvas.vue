@@ -105,7 +105,7 @@ export default {
     context = this.gameCanvas.getContext('2d');
 
     setTimeout(() => {
-      this.onResize();
+      this.onResize(true);
       this.canvasLoaded = true;
     }, 500);
   },
@@ -113,12 +113,12 @@ export default {
     ...mapWritableState(useStore, ['activeNPC'])
   },
   methods: {
-    onResize() {
+    onResize(initialResize = false) {
       const gameboyBackground = document.querySelector('.game__background');
       const gameboyBackgroundWidth = gameboyBackground.clientWidth;
       const gameboyBackgroundHeight = gameboyBackground.clientHeight;
 
-      if (gameboyBackgroundWidth >= MAX_WIDTH) {
+      if (gameboyBackgroundWidth >= MAX_WIDTH && !initialResize) {
         return;
       }
 
