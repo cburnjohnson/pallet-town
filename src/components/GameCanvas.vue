@@ -76,6 +76,8 @@ const LAB_MAP = {
   ZOOM_LEVEL: 225
 };
 
+const MAX_WIDTH = 1512;
+
 const SPEED = 3;
 
 const SYMBOL_NUMBER_TO_MAP = {
@@ -98,7 +100,9 @@ export default {
     this.gameCanvas = document.querySelector('#gameCanvas');
     context = this.gameCanvas.getContext('2d');
 
-    this.onResize();
+    setTimeout(() => {
+      this.onResize();
+    }, 500);
 
     // Player Creation
     const playerDownImage = new Image();
@@ -327,19 +331,29 @@ export default {
 
     this.animate();
     this.addEventListeners();
+
+    this.gameLoaded = true;
   },
   computed: {
     ...mapWritableState(useStore, ['activeNPC'])
   },
   methods: {
     onResize() {
-      const GAMEBOY_SCREEN_WIDTH_PERCENT = 0.64;
-      const GAMEBOY_SCREEN_HEIGHT_PERCENT = 0.67;
-      const { innerWidth } = window;
+      const gameboyBackground = document.querySelector('.game__background');
+      const gameboyBackgroundWidth = gameboyBackground.clientWidth;
+      const gameboyBackgroundHeight = gameboyBackground.clientHeight;
 
-      this.gameCanvas.width = innerWidth * GAMEBOY_SCREEN_WIDTH_PERCENT;
+      if (gameboyBackgroundWidth >= MAX_WIDTH) {
+        return;
+      }
+
+      const GAMEBOY_SCREEN_WIDTH_PERCENT = 0.59;
+      const GAMEBOY_SCREEN_HEIGHT_PERCENT = 0.7;
+
+      this.gameCanvas.width =
+        gameboyBackgroundWidth * GAMEBOY_SCREEN_WIDTH_PERCENT;
       this.gameCanvas.height =
-        this.gameCanvas.width * GAMEBOY_SCREEN_HEIGHT_PERCENT;
+        gameboyBackgroundHeight * GAMEBOY_SCREEN_HEIGHT_PERCENT;
     },
     addEventListeners() {
       window.addEventListener('resize', this.onResize);
@@ -713,5 +727,6 @@ export default {
 .game-canvas {
   display: block;
   border-radius: 6px;
+  max-width: 880px;
 }
 </style>

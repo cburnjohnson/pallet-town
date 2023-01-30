@@ -1,5 +1,11 @@
 <template>
   <div class="game">
+    <img
+      src="@/assets/gameboyBg.svg"
+      alt=""
+      class="game__background"
+    >
+
     <div class="game__container">
       <GameCanvas />
 
@@ -15,7 +21,7 @@ import DialogBox from '@/components/DialogBox.vue';
 import Options from '@/components/Options.vue';
 import useStore from '@/store';
 import { mapState } from 'pinia';
-
+// 1512
 export default {
   components: {
     GameCanvas,
@@ -37,15 +43,20 @@ export default {
   position: relative;
   height: 100%;
   width: 100%;
-  background-image: url('@/assets/gameboyBg.svg');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
+  max-width: 1512px;
 
   &__container {
     position: absolute;
-    top: calc(50% - 74px);
+    top: calc(50% - 50px);
     left: calc(50% - 5px);
+    transform: translate(-50%, -50%);
+  }
+
+  &__background {
+    width: 100%;
+    position: absolute;
+    top: calc(50%);
+    left: calc(50%);
     transform: translate(-50%, -50%);
   }
 }
