@@ -85,6 +85,9 @@ const SYMBOL_NUMBER_TO_MAP = {
   1051: 'LAB_MAP'
 };
 
+const MAX_CANVAS_WIDTH = 892;
+// const MAX_CANVAS_HEIGHT = 598;
+
 export default {
   data() {
     return {
@@ -566,8 +569,8 @@ export default {
         context,
         image: mapImage,
         position: {
-          x: WORLD_MAP.OFFSET.x,
-          y: WORLD_MAP.OFFSET.y
+          x: WORLD_MAP.OFFSET.x - this.getWindowOffsetX(WORLD_MAP),
+          y: WORLD_MAP.OFFSET.y + this.getWindowOffsetY(WORLD_MAP)
         }
       });
 
@@ -719,6 +722,25 @@ export default {
 
       this.animate();
       this.addEventListeners();
+    },
+    getWindowOffsetX(map) {
+      // TODO: REFACTOR ALL OF THIS
+      const windowScale = this.gameCanvas.width / MAX_CANVAS_WIDTH;
+
+      if (windowScale !== 1) {
+        return 0;
+      }
+
+      return map.OFFSET.x - map.OFFSET.x / windowScale;
+    },
+    getWindowOffsetY(map) {
+      const windowScale = this.gameCanvas.width / MAX_CANVAS_WIDTH;
+
+      if (windowScale !== 1) {
+        return 0;
+      }
+
+      return map.OFFSET.y - map.OFFSET.y * windowScale;
     }
   },
   watch: {
