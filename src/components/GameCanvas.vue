@@ -93,7 +93,8 @@ export default {
       mapAnimationFrame: null,
       activeMapData: null,
       worldMapData: null,
-      homeMapData: null
+      homeMapData: null,
+      canvasLoaded: false
     };
   },
   mounted() {
@@ -102,237 +103,8 @@ export default {
 
     setTimeout(() => {
       this.onResize();
+      this.canvasLoaded = true;
     }, 500);
-
-    // Player Creation
-    const playerDownImage = new Image();
-    playerDownImage.src = playerDownImageAsset;
-
-    const playerUpImage = new Image();
-    playerUpImage.src = playerUpImageAsset;
-
-    const playerLeftImage = new Image();
-    playerLeftImage.src = playerLeftImageAsset;
-
-    const playerRightImage = new Image();
-    playerRightImage.src = playerRightImageAsset;
-
-    this.player = new Player({
-      context,
-      image: playerDownImage,
-      sprites: {
-        up: playerUpImage,
-        left: playerLeftImage,
-        right: playerRightImage,
-        down: playerDownImage
-      },
-      position: {
-        x: this.gameCanvas.width / 2 - playerDownImage.width / 4 / 2,
-        y: this.gameCanvas.height / 2
-      },
-      frames: {
-        max: 4
-      }
-    });
-
-    // Cole NPC creation
-    const coleDownImage = new Image();
-    coleDownImage.src = coleDownImageAsset;
-
-    const coleNPC = new NPC({
-      context,
-      image: coleDownImage,
-      sprites: {
-        down: coleDownImage
-      },
-      position: {
-        x: 550,
-        y: 400
-      },
-      frames: {
-        max: 1
-      },
-      interactions: {
-        dialog: [
-          'Hello, I\'m Cole Johnson, a JavaScript specialist in Software Development, delighted to meet you.',
-          'Allow me to share with you my portfolio of accomplished projects.'
-        ],
-        option: {
-          show: false,
-          active: null,
-          list: projects
-        },
-        endDialog: 'Thanks for looking!'
-      },
-      activeInteraction: 'dialog',
-      interactionStep: 0
-    });
-
-    const worldNPCs = [coleNPC];
-
-    // World Map Creation
-    const mapImage = new Image();
-    mapImage.src = mapImageAsset;
-
-    const worldMap = new Sprite({
-      context,
-      image: mapImage,
-      position: {
-        x: WORLD_MAP.OFFSET.x,
-        y: WORLD_MAP.OFFSET.y
-      }
-    });
-
-    const worldForegroundObjectsImage = new Image();
-    worldForegroundObjectsImage.src = foregroundObjectsAsset;
-
-    const worldForegroundObjects = new Sprite({
-      context,
-      image: worldForegroundObjectsImage,
-      position: {
-        x: WORLD_MAP.OFFSET.x,
-        y: WORLD_MAP.OFFSET.y
-      }
-    });
-
-    const worldBoundaries = this.createBoundaries(
-      boundariesData,
-      WORLD_MAP.OFFSET,
-      WORLD_MAP.TILE_WIDTH,
-      64,
-      [1049]
-    );
-    const entrances = this.createBoundaries(
-      entrancesData,
-      WORLD_MAP.OFFSET,
-      WORLD_MAP.TILE_WIDTH,
-      64,
-      [1050, 1051]
-    );
-
-    this.worldMapData = new MapData({
-      map: worldMap,
-      boundaries: [...worldBoundaries, ...worldNPCs],
-      foregroundObjects: worldForegroundObjects,
-      entrances: entrances,
-      npcs: worldNPCs,
-      movables: [
-        worldMap,
-        worldForegroundObjects,
-        ...worldBoundaries,
-        ...entrances,
-        ...worldNPCs
-      ]
-    });
-
-    // Home Map Creation
-    const homeMapImage = new Image();
-    homeMapImage.src = homeMapImageAsset;
-
-    const homeMap = new Sprite({
-      context,
-      image: homeMapImage,
-      position: {
-        x: HOME_MAP.OFFSET.x,
-        y: HOME_MAP.OFFSET.y
-      }
-    });
-
-    const homeForegroundObjectsImage = new Image();
-    homeForegroundObjectsImage.src = homeForegroundObjectsImageAsset;
-
-    const homeForegroundObjects = new Sprite({
-      context,
-      image: homeForegroundObjectsImage,
-      position: {
-        x: HOME_MAP.OFFSET.x,
-        y: HOME_MAP.OFFSET.y
-      }
-    });
-
-    const homeExits = this.createBoundaries(
-      homeExitData,
-      HOME_MAP.OFFSET,
-      HOME_MAP.TILE_WIDTH,
-      36,
-      [8034]
-    );
-    const homeBoundaries = this.createBoundaries(
-      homeBoundariesData,
-      HOME_MAP.OFFSET,
-      HOME_MAP.TILE_WIDTH,
-      36,
-      [8033]
-    );
-
-    this.homeMapData = new MapData({
-      map: homeMap,
-      boundaries: homeBoundaries,
-      foregroundObjects: homeForegroundObjects,
-      exits: homeExits,
-      movables: [
-        homeMap,
-        ...homeBoundaries,
-        ...homeExits,
-        homeForegroundObjects
-      ]
-    });
-
-    // Lab Map Creation
-    const labMapImage = new Image();
-    labMapImage.src = labMapImageAsset;
-
-    const labMap = new Sprite({
-      context,
-      image: labMapImage,
-      position: {
-        x: LAB_MAP.OFFSET.x,
-        y: LAB_MAP.OFFSET.y
-      }
-    });
-
-    const labForegroundObjectsImage = new Image();
-    labForegroundObjectsImage.src = labForegroundObjectsImageAsset;
-
-    const labForegroundObjects = new Sprite({
-      context,
-      image: labForegroundObjectsImage,
-      position: {
-        x: LAB_MAP.OFFSET.x,
-        y: LAB_MAP.OFFSET.y
-      }
-    });
-
-    const labBoundaries = this.createBoundaries(
-      labBoundariesData,
-      LAB_MAP.OFFSET,
-      LAB_MAP.TILE_WIDTH,
-      36,
-      [8034]
-    );
-    const labExits = this.createBoundaries(
-      labExitData,
-      LAB_MAP.OFFSET,
-      LAB_MAP.TILE_WIDTH,
-      36,
-      [8033]
-    );
-
-    this.labMapData = new MapData({
-      map: labMap,
-      boundaries: labBoundaries,
-      foregroundObjects: labForegroundObjects,
-      exits: labExits,
-      movables: [labMap, ...labBoundaries, ...labExits, labForegroundObjects]
-    });
-
-    // Setting initial map
-    this.activeMapData = this.worldMapData;
-
-    this.animate();
-    this.addEventListeners();
-
-    this.gameLoaded = true;
   },
   computed: {
     ...mapWritableState(useStore, ['activeNPC'])
@@ -718,6 +490,240 @@ export default {
       });
 
       return boundaries;
+    },
+    loadAssets() {
+      // Player Creation
+      const playerDownImage = new Image();
+      playerDownImage.src = playerDownImageAsset;
+
+      const playerUpImage = new Image();
+      playerUpImage.src = playerUpImageAsset;
+
+      const playerLeftImage = new Image();
+      playerLeftImage.src = playerLeftImageAsset;
+
+      const playerRightImage = new Image();
+      playerRightImage.src = playerRightImageAsset;
+
+      this.player = new Player({
+        context,
+        image: playerDownImage,
+        sprites: {
+          up: playerUpImage,
+          left: playerLeftImage,
+          right: playerRightImage,
+          down: playerDownImage
+        },
+        position: {
+          x: this.gameCanvas.width / 2 - playerDownImage.width / 4 / 2,
+          y: this.gameCanvas.height / 2
+        },
+        frames: {
+          max: 4
+        }
+      });
+
+      // Cole NPC creation
+      const coleDownImage = new Image();
+      coleDownImage.src = coleDownImageAsset;
+
+      const coleNPC = new NPC({
+        context,
+        image: coleDownImage,
+        sprites: {
+          down: coleDownImage
+        },
+        position: {
+          x: 550,
+          y: 400
+        },
+        frames: {
+          max: 1
+        },
+        interactions: {
+          dialog: [
+            'Hello, I\'m Cole Johnson, a JavaScript specialist in Software Development, delighted to meet you.',
+            'Allow me to share with you my portfolio of accomplished projects.'
+          ],
+          option: {
+            show: false,
+            active: null,
+            list: projects
+          },
+          endDialog: 'Thanks for looking!'
+        },
+        activeInteraction: 'dialog',
+        interactionStep: 0
+      });
+
+      const worldNPCs = [coleNPC];
+
+      // World Map Creation
+      const mapImage = new Image();
+      mapImage.src = mapImageAsset;
+
+      const worldMap = new Sprite({
+        context,
+        image: mapImage,
+        position: {
+          x: WORLD_MAP.OFFSET.x,
+          y: WORLD_MAP.OFFSET.y
+        }
+      });
+
+      const worldForegroundObjectsImage = new Image();
+      worldForegroundObjectsImage.src = foregroundObjectsAsset;
+
+      const worldForegroundObjects = new Sprite({
+        context,
+        image: worldForegroundObjectsImage,
+        position: {
+          x: WORLD_MAP.OFFSET.x,
+          y: WORLD_MAP.OFFSET.y
+        }
+      });
+
+      const worldBoundaries = this.createBoundaries(
+        boundariesData,
+        WORLD_MAP.OFFSET,
+        WORLD_MAP.TILE_WIDTH,
+        64,
+        [1049]
+      );
+      const entrances = this.createBoundaries(
+        entrancesData,
+        WORLD_MAP.OFFSET,
+        WORLD_MAP.TILE_WIDTH,
+        64,
+        [1050, 1051]
+      );
+
+      this.worldMapData = new MapData({
+        map: worldMap,
+        boundaries: [...worldBoundaries, ...worldNPCs],
+        foregroundObjects: worldForegroundObjects,
+        entrances: entrances,
+        npcs: worldNPCs,
+        movables: [
+          worldMap,
+          worldForegroundObjects,
+          ...worldBoundaries,
+          ...entrances,
+          ...worldNPCs
+        ]
+      });
+
+      // Home Map Creation
+      const homeMapImage = new Image();
+      homeMapImage.src = homeMapImageAsset;
+
+      const homeMap = new Sprite({
+        context,
+        image: homeMapImage,
+        position: {
+          x: HOME_MAP.OFFSET.x,
+          y: HOME_MAP.OFFSET.y
+        }
+      });
+
+      const homeForegroundObjectsImage = new Image();
+      homeForegroundObjectsImage.src = homeForegroundObjectsImageAsset;
+
+      const homeForegroundObjects = new Sprite({
+        context,
+        image: homeForegroundObjectsImage,
+        position: {
+          x: HOME_MAP.OFFSET.x,
+          y: HOME_MAP.OFFSET.y
+        }
+      });
+
+      const homeExits = this.createBoundaries(
+        homeExitData,
+        HOME_MAP.OFFSET,
+        HOME_MAP.TILE_WIDTH,
+        36,
+        [8034]
+      );
+      const homeBoundaries = this.createBoundaries(
+        homeBoundariesData,
+        HOME_MAP.OFFSET,
+        HOME_MAP.TILE_WIDTH,
+        36,
+        [8033]
+      );
+
+      this.homeMapData = new MapData({
+        map: homeMap,
+        boundaries: homeBoundaries,
+        foregroundObjects: homeForegroundObjects,
+        exits: homeExits,
+        movables: [
+          homeMap,
+          ...homeBoundaries,
+          ...homeExits,
+          homeForegroundObjects
+        ]
+      });
+
+      // Lab Map Creation
+      const labMapImage = new Image();
+      labMapImage.src = labMapImageAsset;
+
+      const labMap = new Sprite({
+        context,
+        image: labMapImage,
+        position: {
+          x: LAB_MAP.OFFSET.x,
+          y: LAB_MAP.OFFSET.y
+        }
+      });
+
+      const labForegroundObjectsImage = new Image();
+      labForegroundObjectsImage.src = labForegroundObjectsImageAsset;
+
+      const labForegroundObjects = new Sprite({
+        context,
+        image: labForegroundObjectsImage,
+        position: {
+          x: LAB_MAP.OFFSET.x,
+          y: LAB_MAP.OFFSET.y
+        }
+      });
+
+      const labBoundaries = this.createBoundaries(
+        labBoundariesData,
+        LAB_MAP.OFFSET,
+        LAB_MAP.TILE_WIDTH,
+        36,
+        [8034]
+      );
+      const labExits = this.createBoundaries(
+        labExitData,
+        LAB_MAP.OFFSET,
+        LAB_MAP.TILE_WIDTH,
+        36,
+        [8033]
+      );
+
+      this.labMapData = new MapData({
+        map: labMap,
+        boundaries: labBoundaries,
+        foregroundObjects: labForegroundObjects,
+        exits: labExits,
+        movables: [labMap, ...labBoundaries, ...labExits, labForegroundObjects]
+      });
+
+      // Setting initial map
+      this.activeMapData = this.worldMapData;
+
+      this.animate();
+      this.addEventListeners();
+    }
+  },
+  watch: {
+    canvasLoaded() {
+      this.loadAssets();
     }
   }
 };
