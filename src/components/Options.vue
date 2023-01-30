@@ -109,13 +109,16 @@ export default {
 <style lang="scss" scoped>
 .options {
   position: absolute;
-  top: 16px;
-  left: 16px;
+  top: 0px;
   display: grid;
   grid-template-areas:
     'optionCategories options .'
     'activeOption activeOption activeOption';
   gap: 16px;
+  max-width: 100%;
+  max-height: 100%;
+  overflow: auto;
+  padding: 16px;
 
   &__list {
     align-self: flex-start;

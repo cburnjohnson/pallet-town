@@ -38,10 +38,11 @@ export default {
   left: 50%;
   transform: translateX(-50%);
   width: 96%;
-  height: 180px;
   background-color: white;
   border-radius: $border-radius;
-  padding: 20px;
+  padding: 26px 20px;
   line-height: 32px;
+  max-height: 124px;
+  overflow-y: auto;
 }
 </style>

@@ -4,6 +4,7 @@ export default [
     description:
       'K. Holmberg\'s art demo eCommerce site built with the MERN stack.',
     technologyUsed: ['React', 'NodeJS', 'MongoDB', 'Express', 'CSS', 'Stripe'],
+    thumbnail: '../src/assets/projects/kHolmbergArt.jpeg',
     links: [
       {
         name: 'Live',
