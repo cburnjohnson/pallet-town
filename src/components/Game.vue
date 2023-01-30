@@ -47,8 +47,8 @@ export default {
 
   &__container {
     position: absolute;
-    top: calc(50% - 50px);
-    left: calc(50% - 5px);
+    top: calc(50% - 3vw);
+    left: calc(50% - 0.5vw);
     transform: translate(-50%, -50%);
   }
 
