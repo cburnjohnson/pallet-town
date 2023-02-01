@@ -61,7 +61,7 @@ const WORLD_MAP = {
 const HOME_MAP = {
   OFFSET: {
     x: -300,
-    y: -320
+    y: -470
   },
   TILE_WIDTH: 34,
   ZOOM_LEVEL: 225
@@ -69,8 +69,8 @@ const HOME_MAP = {
 
 const LAB_MAP = {
   OFFSET: {
-    x: -160,
-    y: -410
+    x: -133,
+    y: -500
   },
   TILE_WIDTH: 34,
   ZOOM_LEVEL: 225
@@ -537,8 +537,8 @@ export default {
           down: coleDownImage
         },
         position: {
-          x: 550,
-          y: 400
+          x: 446,
+          y: -200
         },
         frames: {
           max: 1
@@ -558,8 +558,6 @@ export default {
         activeInteraction: 'dialog',
         interactionStep: 0
       });
-
-      const worldNPCs = [coleNPC];
 
       // World Map Creation
       const mapImage = new Image();
@@ -600,6 +598,8 @@ export default {
         64,
         [1050, 1051]
       );
+
+      const worldNPCs = [];
 
       this.worldMapData = new MapData({
         map: worldMap,
@@ -709,16 +709,19 @@ export default {
         [8033]
       );
 
+      const labNPCs = [coleNPC];
+
       this.labMapData = new MapData({
         map: labMap,
-        boundaries: labBoundaries,
+        boundaries: [...labBoundaries, ...labNPCs],
         foregroundObjects: labForegroundObjects,
         exits: labExits,
-        movables: [labMap, ...labBoundaries, ...labExits, labForegroundObjects]
+        npcs: labNPCs,
+        movables: [labMap, ...labBoundaries, ...labExits, labForegroundObjects, ...labNPCs]
       });
 
       // Setting initial map
-      this.activeMapData = this.worldMapData;
+      this.activeMapData = this.labMapData;
 
       this.animate();
       this.addEventListeners();
