@@ -24,10 +24,10 @@
           class="active-option__group active-option__group--col active-option__group--gap"
         >
           <h2 class="active-option__header active-option__header--2">
-            Technology Used
+            Tech Used
           </h2>
 
-          <div class="active-option__group">
+          <div class="active-option__list-container">
             <ul class="active-option__list">
               <li
                 v-for="technology in activeOption?.technologyUsed"
@@ -81,6 +81,7 @@ export default {
   border-radius: 4px;
   text-align: center;
   margin-right: 16px;
+  height: 100%;
   max-height: 30vw;
   max-width: 100%;
   overflow-y: auto;
@@ -92,13 +93,13 @@ export default {
   &__list {
     list-style: none;
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-start;
     flex-flow: wrap;
     margin-top: 10px;
   }
 
   &__item {
-    min-width: 33.33%;
+    min-width: 50%;
     margin-top: 8px;
     font-size: 12px;
   }
@@ -131,6 +132,7 @@ export default {
 
   &__thumbnail {
     width: 60%;
+    border-radius: 4px;
   }
 
   &__link {
