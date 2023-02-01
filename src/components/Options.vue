@@ -1,50 +1,52 @@
 <template>
   <div class="options">
-    <ul class="options__list options__list--option-categories">
-      <li
-        v-for="optionCategory in optionCategories"
-        :key="optionCategory"
-        :class="[
-          'options__item',
-          { 'options__item--active': isOptionCategoryActive(optionCategory) }
-        ]"
+    <div class="options__list-container">
+      <ul class="options__list options__list--option-categories">
+        <li
+          v-for="optionCategory in optionCategories"
+          :key="optionCategory"
+          :class="[
+            'options__item',
+            { 'options__item--active': isOptionCategoryActive(optionCategory) }
+          ]"
+        >
+          <button
+            class="options__button"
+            @click="setActiveOptionCategory(optionCategory)"
+          >
+            {{ optionCategory }}
+          </button>
+        </li>
+      </ul>
+
+      <button
+        class="options__button options__button--mt"
+        @click="exitOptions"
       >
-        <button
-          class="options__button"
-          @click="setActiveOptionCategory(optionCategory)"
-        >
-          {{ optionCategory }}
-        </button>
-      </li>
+        Exit
+      </button>
+    </div>
 
-      <li class="options__item">
-        <button
-          class="options__button"
-          @click="exitOptions"
-        >
-          Exit
-        </button>
-      </li>
-    </ul>
-
-    <ul
+    <div
       v-if="activeNPCOptions.length > 0"
-      class="options__list options__list--options"
+      class="options__list-container"
     >
-      <li
-        v-for="option in activeNPCOptions"
-        :key="option.name"
-        :class="[
-          'options__item',
-          { 'options__item--active': isOptionActive(option.name) }
-        ]"
-        @click="setActiveOption(option)"
-      >
-        <button class="option__button">
-          {{ option.name }}
-        </button>
-      </li>
-    </ul>
+      <ul class="options__list options__list--options">
+        <li
+          v-for="option in activeNPCOptions"
+          :key="option.name"
+          :class="[
+            'options__item',
+            { 'options__item--active': isOptionActive(option.name) }
+          ]"
+          @click="setActiveOption(option)"
+        >
+          <button class="option__button">
+            {{ option.name }}
+          </button>
+        </li>
+      </ul>
+    </div>
 
     <ActiveOption
       v-if="activeOption"
@@ -120,9 +122,8 @@ export default {
   overflow: auto;
   padding: 16px;
 
-  &__list {
+  &__list-container {
     align-self: flex-start;
-    list-style: none;
     background-color: white;
     padding: 24px;
     border-radius: 4px;
@@ -136,6 +137,12 @@ export default {
     &--options {
       grid-area: options;
     }
+  }
+
+  &__list {
+    list-style: none;
+    max-height: 80px;
+    overflow-y: auto;
   }
 
   &__item {
@@ -156,6 +163,12 @@ export default {
         position: absolute;
         left: -16px;
       }
+    }
+  }
+
+  &__button {
+    &--mt {
+      margin-top: 16px;
     }
   }
 }
