@@ -76,7 +76,7 @@ export default {
       return this.activeNPC.interactions.option.active;
     },
     optionCategories() {
-      return this.npcOptions.map((npcOption) => npcOption.category);
+      return new Set(this.npcOptions.map((npcOption) => npcOption.category));
     },
     activeNPCOptions() {
       return this.npcOptions.filter(

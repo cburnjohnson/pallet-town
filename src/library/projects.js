@@ -16,26 +16,7 @@ export default [
         url: 'https://github.com/cburnjohnson/k-holmberg'
       }
     ],
-    category: 'mern'
-  },
-  {
-    id: 2,
-    name: 'Expense Tracker',
-    description:
-      'MERN Stack application that keeps track of the user\'s expenses.',
-    technologyUsed: ['React', 'NodeJS', 'MongoDB', 'Express', 'CSS', 'JWT'],
-    thumbnail: '../src/assets/projects/kHolmbergArt.jpeg',
-    links: [
-      {
-        name: 'Live',
-        url: 'https://expensetracker47.herokuapp.com/'
-      },
-      {
-        name: 'Github',
-        url: 'https://github.com/cburnjohnson/expense-tracker'
-      }
-    ],
-    category: 'mern'
+    category: 'MERN'
   },
   {
     id: 3,
@@ -43,7 +24,7 @@ export default [
     description:
       'MERN Stack application that tracks the user\'s movies, TV shows, and anime they have watched.',
     technologyUsed: ['React', 'NodeJS', 'MongoDB', 'Express', 'CSS', 'JWT'],
-    thumbnail: '../src/assets/projects/kHolmbergArt.jpeg',
+    thumbnail: '../src/assets/projects/watchNTrack.jpeg',
     links: [
       {
         name: 'Live',
@@ -54,32 +35,14 @@ export default [
         url: 'https://github.com/cburnjohnson/watch-n-track'
       }
     ],
-    category: 'mern'
-  },
-  {
-    id: 4,
-    name: 'Phone Book',
-    description:
-      'MERN Stack phone book application that stores user\'s personal professional contacts.',
-    technologyUsed: ['React', 'NodeJS', 'MongoDB', 'Express', 'CSS', 'JWT'],
-    thumbnail: '../src/assets/projects/kHolmbergArt.jpeg',
-    links: [
-      {
-        name: 'Live',
-        url: 'https://phonebook47.herokuapp.com/'
-      },
-      {
-        name: 'Github',
-        url: 'https://github.com/cburnjohnson/phone-book'
-      }
-    ],
-    category: 'mern'
+    category: 'MERN'
   },
   {
     name: 'Where To Eat',
     description:
       'Restaurant application that displays a random nearby restaurant and information about the restaurant.',
     technologyUsed: ['React', 'JavaScript', 'CSS', 'Bootstrap', 'Google Places API'],
+    thumbnail: '../src/assets/projects/whereToEat.jpeg',
     links: [
       {
         name: 'Live',
@@ -97,6 +60,7 @@ export default [
     description:
       'An application that emulates a Pokédex.',
     technologyUsed: ['React', 'JavaScript', 'CSS'],
+    thumbnail: '../src/assets/projects/pokedex.jpeg',
     links: [
       {
         name: 'Live',
@@ -114,6 +78,7 @@ export default [
     description:
       'Text Racer is a game that challenges how fast you can type on your mobile device.',
     technologyUsed: ['React Native', 'JavaScript', 'Useless Facts API'],
+    thumbnail: 'https://youtu.be/CcKWNcFMmHo',
     links: [
       {
         name: 'Github',
@@ -123,10 +88,11 @@ export default [
     category: 'React Native'
   },
   {
-    name: 'Meme Dispense',
+    name: 'Meme Dispenser',
     description:
       'Dispenses random memes.',
     technologyUsed: ['JavaScript', 'HTML', 'CSS'],
+    thumbnail: '../src/assets/projects/memeDispenser.jpeg',
     links: [
       {
         name: 'Live',
@@ -144,6 +110,7 @@ export default [
     description:
       'Generates the quote of the day.',
     technologyUsed: ['JavaScript', 'HTML', 'CSS'],
+    thumbnail: '../src/assets/projects/quoteOfTheDay.jpeg',
     links: [
       {
         name: 'Live',
@@ -178,6 +145,7 @@ export default [
     description:
       'To Do List application that records tasks and moves them over to the done section when completed.',
     technologyUsed: ['JavaScript', 'HTML', 'CSS'],
+    thumbnail: '../src/assets/projects/toDoList.jpeg',
     links: [
       {
         name: 'Live',
@@ -195,6 +163,7 @@ export default [
     description:
       'A website created for my dog that allows me to login and upload pictures that get stored in a picture library directory. The homepage has a carousel populated with random pictures from the picture library.',
     technologyUsed: ['PHP', 'JavaScript', 'HTML', 'CSS'],
+    thumbnail: '../src/assets/projects/cloudThePom.png',
     links: [
       {
         name: 'Github',
