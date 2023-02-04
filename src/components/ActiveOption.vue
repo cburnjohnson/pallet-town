@@ -12,9 +12,10 @@
       </p>
 
       <div
-        class="active-option__group active-option__group--mt active-option__group--gap"
+        class="active-option__group active-option__group--mt active-option__group--gap active-option__group--space"
       >
         <img
+          v-if="activeOption.thumbnail"
           :src="activeOption.thumbnail"
           alt=""
           class="active-option__thumbnail"

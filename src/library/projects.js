@@ -78,11 +78,15 @@ export default [
     description:
       'Text Racer is a game that challenges how fast you can type on your mobile device.',
     technologyUsed: ['React Native', 'JavaScript', 'Useless Facts API'],
-    thumbnail: 'https://youtu.be/CcKWNcFMmHo',
+    thumbnail: null,
     links: [
       {
         name: 'Github',
         url: 'https://github.com/cburnjohnson/text-racer'
+      },
+      {
+        name: 'Demo',
+        url: 'https://youtu.be/CcKWNcFMmHo'
       }
     ],
     category: 'React Native'
