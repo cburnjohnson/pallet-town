@@ -43,12 +43,13 @@ export default {
   position: relative;
   height: 100%;
   width: 100%;
-  max-width: 1512px;
+  max-width: 1366px;
+  min-width: 1366px;
 
   &__container {
     position: absolute;
-    top: calc(50% - 3vw);
-    left: calc(50% - 0.5vw);
+    top: calc(50% - 45px);
+    left: calc(50% - 5px);
     transform: translate(-50%, -50%);
   }
 

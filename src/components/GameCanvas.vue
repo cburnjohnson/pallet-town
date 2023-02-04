@@ -51,8 +51,8 @@ const keys = {
 
 const WORLD_MAP = {
   OFFSET: {
-    x: -230,
-    y: -530
+    x: -310,
+    y: -570
   },
   TILE_WIDTH: 30,
   ZOOM_LEVEL: 400
@@ -60,8 +60,8 @@ const WORLD_MAP = {
 
 const HOME_MAP = {
   OFFSET: {
-    x: -300,
-    y: -470
+    x: -369,
+    y: -509
   },
   TILE_WIDTH: 34,
   ZOOM_LEVEL: 225
@@ -69,14 +69,12 @@ const HOME_MAP = {
 
 const LAB_MAP = {
   OFFSET: {
-    x: -133,
-    y: -500
+    x: -187,
+    y: -542
   },
   TILE_WIDTH: 34,
   ZOOM_LEVEL: 225
 };
-
-const MAX_WIDTH = 1512;
 
 const SPEED = 3;
 
@@ -85,8 +83,7 @@ const SYMBOL_NUMBER_TO_MAP = {
   1051: 'LAB_MAP'
 };
 
-const MAX_CANVAS_WIDTH = 892;
-// const MAX_CANVAS_HEIGHT = 598;
+// Screen size 1366 x 768
 
 export default {
   data() {
@@ -104,34 +101,16 @@ export default {
     this.gameCanvas = document.querySelector('#gameCanvas');
     context = this.gameCanvas.getContext('2d');
 
-    setTimeout(() => {
-      this.onResize(true);
-      this.canvasLoaded = true;
-    }, 500);
+    this.gameCanvas.width = 788;
+    this.gameCanvas.height = 530;
+
+    this.canvasLoaded = true;
   },
   computed: {
     ...mapWritableState(useStore, ['activeNPC'])
   },
   methods: {
-    onResize(initialResize = false) {
-      const gameboyBackground = document.querySelector('.game__background');
-      const gameboyBackgroundWidth = gameboyBackground.clientWidth;
-      const gameboyBackgroundHeight = gameboyBackground.clientHeight;
-
-      if (gameboyBackgroundWidth >= MAX_WIDTH && !initialResize) {
-        return;
-      }
-
-      const GAMEBOY_SCREEN_WIDTH_PERCENT = 0.59;
-      const GAMEBOY_SCREEN_HEIGHT_PERCENT = 0.7;
-
-      this.gameCanvas.width =
-        gameboyBackgroundWidth * GAMEBOY_SCREEN_WIDTH_PERCENT;
-      this.gameCanvas.height =
-        gameboyBackgroundHeight * GAMEBOY_SCREEN_HEIGHT_PERCENT;
-    },
     addEventListeners() {
-      window.addEventListener('resize', this.onResize);
       window.addEventListener('keydown', (event) => {
         switch (event.key) {
           case 'w':
@@ -567,8 +546,8 @@ export default {
         context,
         image: mapImage,
         position: {
-          x: WORLD_MAP.OFFSET.x - this.getWindowOffsetX(WORLD_MAP),
-          y: WORLD_MAP.OFFSET.y + this.getWindowOffsetY(WORLD_MAP)
+          x: WORLD_MAP.OFFSET.x,
+          y: WORLD_MAP.OFFSET.y
         }
       });
 
@@ -717,33 +696,20 @@ export default {
         foregroundObjects: labForegroundObjects,
         exits: labExits,
         npcs: labNPCs,
-        movables: [labMap, ...labBoundaries, ...labExits, labForegroundObjects, ...labNPCs]
+        movables: [
+          labMap,
+          ...labBoundaries,
+          ...labExits,
+          labForegroundObjects,
+          ...labNPCs
+        ]
       });
 
       // Setting initial map
-      this.activeMapData = this.labMapData;
+      this.activeMapData = this.worldMapData;
 
       this.animate();
       this.addEventListeners();
-    },
-    getWindowOffsetX(map) {
-      // TODO: REFACTOR ALL OF THIS
-      const windowScale = this.gameCanvas.width / MAX_CANVAS_WIDTH;
-
-      if (windowScale !== 1) {
-        return 0;
-      }
-
-      return map.OFFSET.x - map.OFFSET.x / windowScale;
-    },
-    getWindowOffsetY(map) {
-      const windowScale = this.gameCanvas.width / MAX_CANVAS_WIDTH;
-
-      if (windowScale !== 1) {
-        return 0;
-      }
-
-      return map.OFFSET.y - map.OFFSET.y * windowScale;
     }
   },
   watch: {
