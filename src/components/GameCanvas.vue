@@ -583,8 +583,7 @@ export default {
         WORLD_MAP.OFFSET,
         WORLD_MAP.TILE_WIDTH,
         64,
-        [1050, 1051],
-        'rgba(255, 255, 255, 1)'
+        [1050, 1051]
       );
 
       const worldNPCs = [];
