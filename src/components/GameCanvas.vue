@@ -338,16 +338,13 @@ export default {
         for (let i = 0; i < boundaries.length; i++) {
           const boundary = boundaries[i];
           if (
-            this.rectangularCollision(
-              { ...this.player, height: -this.player.height },
-              {
-                ...boundary,
-                position: {
-                  x: boundary.position.x - SPEED,
-                  y: boundary.position.y
-                }
+            this.rectangularCollision(this.player, {
+              ...boundary,
+              position: {
+                x: boundary.position.x - SPEED,
+                y: boundary.position.y
               }
-            )
+            })
           ) {
             return;
           }
