@@ -16,7 +16,7 @@ import playerDownImageAsset from '@/assets/sprites/player/red-down.png';
 import playerLeftImageAsset from '@/assets/sprites/player/red-left.png';
 import playerRightImageAsset from '@/assets/sprites/player/red-right.png';
 import playerUpImageAsset from '@/assets/sprites/player/red-up.png';
-import coleDownImageAsset from '@/assets/sprites/npcs/myDoodDown.png';
+import coleDownImageAsset from '@/assets/sprites/npcs/cole-down.png';
 import Sprite from '@/classes/Sprite';
 import NPC from '@/classes/NPC';
 import Player from '@/classes/Player';
