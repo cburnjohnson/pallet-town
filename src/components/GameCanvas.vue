@@ -213,22 +213,6 @@ export default {
       }
 
       if (keys.w.pressed && lastKeyPressed === 'w') {
-        // stop movement if running into a boundary
-        for (let i = 0; i < boundaries.length; i++) {
-          const boundary = boundaries[i];
-          if (
-            this.rectangularCollision(this.player, {
-              ...boundary,
-              position: {
-                x: boundary.position.x,
-                y: boundary.position.y + SPEED
-              }
-            })
-          ) {
-            return;
-          }
-        }
-
         // check if player is going into an entrance
         for (let i = 0; i < entrances.length; i++) {
           const entrance = entrances[i];
@@ -260,6 +244,22 @@ export default {
             }
 
             this.setActiveMapData(newMapData);
+            return;
+          }
+        }
+
+        // stop movement if running into a boundary
+        for (let i = 0; i < boundaries.length; i++) {
+          const boundary = boundaries[i];
+          if (
+            this.rectangularCollision(this.player, {
+              ...boundary,
+              position: {
+                x: boundary.position.x,
+                y: boundary.position.y + SPEED
+              }
+            })
+          ) {
             return;
           }
         }
@@ -338,13 +338,16 @@ export default {
         for (let i = 0; i < boundaries.length; i++) {
           const boundary = boundaries[i];
           if (
-            this.rectangularCollision(this.player, {
-              ...boundary,
-              position: {
-                x: boundary.position.x - SPEED,
-                y: boundary.position.y
+            this.rectangularCollision(
+              { ...this.player, height: -this.player.height },
+              {
+                ...boundary,
+                position: {
+                  x: boundary.position.x - SPEED,
+                  y: boundary.position.y
+                }
               }
-            })
+            )
           ) {
             return;
           }
@@ -443,7 +446,14 @@ export default {
     setActiveMapData(mapData) {
       this.activeMapData = mapData;
     },
-    createBoundaries(data, mapOffset, mapTileWidth, bw, symbolNumbers) {
+    createBoundaries(
+      data,
+      mapOffset,
+      mapTileWidth,
+      bw,
+      symbolNumbers,
+      boundaryColor
+    ) {
       const boundariesMap = [];
       for (let i = 0; i < data.length; i += mapTileWidth) {
         boundariesMap.push(data.slice(i, i + mapTileWidth));
@@ -465,7 +475,8 @@ export default {
                 x: j * bw + mapOffset.x,
                 y: i * bw + mapOffset.y
               },
-              symbolNumber
+              symbolNumber,
+              color: boundaryColor
             })
           );
         });
@@ -575,7 +586,8 @@ export default {
         WORLD_MAP.OFFSET,
         WORLD_MAP.TILE_WIDTH,
         64,
-        [1050, 1051]
+        [1050, 1051],
+        'rgba(255, 255, 255, 1)'
       );
 
       const worldNPCs = [];

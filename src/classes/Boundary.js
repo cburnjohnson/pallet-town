@@ -6,8 +6,8 @@ export default class Boundary {
 
   constructor({ position, color = 'rgba(255, 255, 255, 0)', symbolNumber }) {
     this.position = position;
-    this.width = 40;
-    this.height = 40;
+    this.width = 64;
+    this.height = 64;
     this.color = color;
     this.symbolNumber = symbolNumber;
   }
