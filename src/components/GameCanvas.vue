@@ -547,7 +547,7 @@ export default {
         interactionStep: 0
       });
 
-      // Cole NPC creation
+      // NPC creation
       const npcOneDownImage = new Image();
       npcOneDownImage.src = npcOneDownImageAssetAsset;
 
