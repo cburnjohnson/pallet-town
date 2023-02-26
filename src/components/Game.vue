@@ -8,6 +8,7 @@
 
     <div class="game__container">
       <GameCanvas />
+      <GameControls />
 
       <DialogBox v-if="activeNPC" />
       <Options v-if="showOptions" />
@@ -19,14 +20,16 @@
 import GameCanvas from '@/components/GameCanvas.vue';
 import DialogBox from '@/components/DialogBox.vue';
 import Options from '@/components/Options.vue';
+import GameControls from '@/components/GameControls.vue';
 import useStore from '@/store';
 import { mapState } from 'pinia';
-// 1512
+
 export default {
   components: {
     GameCanvas,
     DialogBox,
-    Options
+    Options,
+    GameControls
   },
   computed: {
     ...mapState(useStore, ['activeNPC']),
