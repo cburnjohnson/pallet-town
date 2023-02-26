@@ -99,6 +99,10 @@ export default {
     margin-top: 10px;
   }
 
+  &__description {
+    font-size: 14px;
+  }
+
   &__item {
     min-width: 50%;
     margin-top: 8px;

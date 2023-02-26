@@ -118,7 +118,7 @@ export default {
   top: 0px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
   height: 100%;
   max-width: 100%;
   max-height: 100%;
@@ -133,7 +133,7 @@ export default {
   &__list-container {
     align-self: flex-start;
     background-color: white;
-    padding: 24px;
+    padding: 16px;
     border-radius: 4px;
     border: 4px solid black;
     min-width: 270px;
