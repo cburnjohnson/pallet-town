@@ -371,7 +371,7 @@ export default {
         if (
           this.activeNPC.interactionStep ===
             this.activeNPC.interactions.dialog.length - 1 &&
-          this.activeNPC.interactions.option.list.length > 0 &&
+          this.activeNPC.interactions.option?.list.length > 0 &&
           this.activeNPC.activeInteraction !== 'endDialog'
         ) {
           this.activeNPC.interactions.option.show = true;

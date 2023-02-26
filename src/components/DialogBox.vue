@@ -40,7 +40,7 @@ export default {
   width: 96%;
   background-color: white;
   border-radius: $border-radius;
-  padding: 26px 20px;
+  padding: 10px 20px;
   line-height: 32px;
   max-height: 124px;
   overflow-y: auto;
