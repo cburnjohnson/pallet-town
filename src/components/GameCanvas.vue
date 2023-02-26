@@ -17,7 +17,6 @@ import playerLeftImageAsset from '@/assets/sprites/player/red-left.png';
 import playerRightImageAsset from '@/assets/sprites/player/red-right.png';
 import playerUpImageAsset from '@/assets/sprites/player/red-up.png';
 import coleDownImageAsset from '@/assets/sprites/npcs/cole-down.png';
-import npcOneDownImageAssetAsset from '@/assets/sprites/npcs/npcOneDown.png';
 import Sprite from '@/classes/Sprite';
 import NPC from '@/classes/NPC';
 import Player from '@/classes/Player';
@@ -547,39 +546,6 @@ export default {
         interactionStep: 0
       });
 
-      // NPC creation
-      const npcOneDownImage = new Image();
-      npcOneDownImage.src = npcOneDownImageAssetAsset;
-
-      const npcOne = new NPC({
-        context,
-        image: npcOneDownImage,
-        sprites: {
-          down: npcOneDownImage
-        },
-        position: {
-          x: 450,
-          y: 350
-        },
-        frames: {
-          max: 4
-        },
-        interactions: {
-          dialog: [
-            'Hello, I\'m Cole Johnson, a JavaScript specialist in Software Development, delighted to meet you.',
-            'Allow me to share with you my portfolio of accomplished projects.'
-          ],
-          option: {
-            show: false,
-            active: null,
-            list: projects
-          },
-          endDialog: 'Thanks for looking!'
-        },
-        activeInteraction: 'dialog',
-        interactionStep: 0
-      });
-
       // World Map Creation
       const mapImage = new Image();
       mapImage.src = mapImageAsset;
@@ -620,7 +586,7 @@ export default {
         [1050, 1051]
       );
 
-      const worldNPCs = [npcOne];
+      const worldNPCs = [];
 
       this.worldMapData = new MapData({
         map: worldMap,
