@@ -27,5 +27,9 @@
     "vue-cli-plugin-pinia": "~0.2.3",
     "vue-tsc": "^1.0.12"
   },
-  "type": "module"
+  "type": "module",
+  "engines": {
+    "node": "^18.12.1",
+    "npm": "^8.19.2"
+  }
 }

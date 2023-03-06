@@ -696,7 +696,7 @@ export default {
         [8033]
       );
 
-      const labNPCs = [coleNPC];
+      const labNPCs = [];
 
       this.labMapData = new MapData({
         map: labMap,
